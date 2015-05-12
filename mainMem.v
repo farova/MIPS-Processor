@@ -6,7 +6,7 @@ input [0:1] acc_size;
 output [0:31] data_out;
 output busy;
 
-reg [0:31] mem_block [/* 8 000 000 ???????*/];
+reg [0:31] mem_block [1048578];	// 1MB
 
 
 always @ (posedge clk) begin
