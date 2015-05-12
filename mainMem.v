@@ -1,12 +1,20 @@
 module main_mem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
+
+parameter ACCESS_SIZE 	= 2;
+parameter ADDRESS_SIZE 	= 32;
+parameter DATA_SIZE 	= 32;
+parameter MEM_SIZE 	= 1048578; // 1MB
+parameter MEM_WIDTH 	= 8;
+
 input clk, wren;
-input [0:31] addr, data_in;
-input [0:1] acc_size;
+input [0:ADDRESS_SIZE-1] 	addr;
+input [0:DATA_SIZE-1] 		data_in;
+input [0:ACCESS_SIZE-1] 	acc_size;
 
-output [0:31] data_out;
-output busy;
+output [0:DATA_SIZE-1] 		data_out;
+output 				busy;
 
-reg [0:31] mem_block [1048578];	// 1MB
+reg [0:DATA_SIZE-1] 		mem_block [0:MEM_SIZE-1];
 
 
 always @ (posedge clk) begin
