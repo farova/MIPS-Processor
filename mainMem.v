@@ -1,4 +1,4 @@
-module main_mem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
+module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 parameter ACCESS_SIZE 	= 2;
 parameter ADDRESS_SIZE 	= 32;

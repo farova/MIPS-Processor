@@ -8,46 +8,47 @@ z2
 !i10f 100
 cModel Technology
 dd:/modelsim/examples
-vmain_mem
-Z0 !s110 1431490058
+vmainMem
+Z0 !s110 1431536068
 !i10b 1
-!s100 :0idYoc466CP]g9Jb>:7o1
-IWDA_b5P:fkiioIYAmQ36G2
+!s100 gUL4RICL8TXdEHzFf1M_61
+I]YFGl:`DHdc9Q`X6eTW=f0
 Z1 VDg1SIo80bB@j0V0VzS_@n1
 Z2 dD:/DEVELOPMENT/MIPS-Processor
-Z3 w1431489841
+w1431535935
 8D:/DEVELOPMENT/MIPS-Processor/mainMem.v
 FD:/DEVELOPMENT/MIPS-Processor/mainMem.v
 L0 1
-Z4 OP;L;10.4a;61
+Z3 OP;L;10.4a;61
 r1
 !s85 0
 31
-!s108 1431490057.000000
+!s108 1431536067.000000
 !s107 D:/DEVELOPMENT/MIPS-Processor/mainMem.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/DEVELOPMENT/MIPS-Processor/mainMem.v|
 !s101 -O0
 !i113 1
-Z5 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
+Z4 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
+nmain@mem
 vmainMem_tb
 R0
 !i10b 1
-!s100 QHZRz23698eSlHhDjQ6mA1
-I<IMCI9Vo@S;j8BQn?CW9@1
+!s100 2SbakCA=EFMEI8^WR?KJg2
+IzMB_j_4j]NG[g:o2^U<Ob2
 R1
 R2
-R3
+w1431536060
 8D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v
 FD:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v
 L0 1
-R4
+R3
 r1
 !s85 0
 31
-!s108 1431490058.000000
+!s108 1431536068.000000
 !s107 D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v|
 !s90 -reportprogress|300|-work|work|-stats=none|D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v|
 !s101 -O0
 !i113 1
-R5
+R4
 nmain@mem_tb

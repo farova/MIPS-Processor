@@ -6,12 +6,12 @@ parameter DATA_SIZE 	= 32;
 parameter MEM_SIZE 	= 1048578; // 1MB
 parameter MEM_WIDTH 	= 8;
 
-input clk, wren;
+input clk, wren, en;
 input [0:ADDRESS_SIZE-1] 	addr;
-input [0:DATA_SIZE-1] 		data_in;
+input [0:DATA_SIZE-1] 		d_in;
 input [0:ACCESS_SIZE-1] 	acc_size;
 
-output [0:DATA_SIZE-1] 		data_out;
+output [0:DATA_SIZE-1] 		d_out;
 output 				busy;
 
 reg [0:DATA_SIZE-1] 		mem_block [0:MEM_SIZE-1];
