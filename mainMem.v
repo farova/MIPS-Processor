@@ -13,13 +13,13 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
-	output [0:DATA_SIZE-1] 		d_out;
+	output reg[0:DATA_SIZE-1] 		d_out;
 	output 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
 	integer 					i, word_counter;
-	wire[0:ADDRESS_SIZE-1]		mem_index;	// translated address index inside memory
+	wire[0:ADDRESS_SIZE-1]		mem_index, valid_addr;	// translated address index inside memory
 
 	// Initilization
 	initial begin
@@ -32,23 +32,29 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	// Memory conversion
 	assign mem_index = addr - START_ADDRESS;
+	
+	// control signals
+	assign valid_addr = addr > START_ADDRESS && mem_index < MEM_SIZE;
 
 	// Write data
 	always @ (posedge clk) begin
-		if(en) begin
-			if (addr > START_ADDRESS && mem_index < MEM_SIZE) begin
-				if (wren) begin
-					mem_block[mem_index] = d_in[0:7];
-					mem_block[mem_index+1] = d_in[8:15];
-					mem_block[mem_index+2] = d_in[16:23];
-					mem_block[mem_index+3] = d_in[24:31];
-				end
-			end
+		if(en && wren && valid_addr) begin
+			mem_block[mem_index] = d_in[0:7];
+			mem_block[mem_index+1] = d_in[8:15];
+			mem_block[mem_index+2] = d_in[16:23];
+			mem_block[mem_index+3] = d_in[24:31];
 		end
 	end
 	
 	// Read data
-	
+	always @ (negedge clk) begin
+		if(en && !wren && valid_addr) begin
+			d_out = { mem_block[mem_index],
+				mem_block[mem_index+1],
+				mem_block[mem_index+2],
+				mem_block[mem_index+3] };
+		end	
+	end
 
 /*case (acc_size)
 	//2'b00: 
