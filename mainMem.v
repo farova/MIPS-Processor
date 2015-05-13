@@ -18,9 +18,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
-	integer i;
+	integer 					i, word_counter;
 	wire[0:ADDRESS_SIZE-1]		mem_index;	// translated address index inside memory
 
+	// Initilization
 	initial begin
 		$display ("Initialize memory to zero");
 
@@ -29,15 +30,25 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 
+	// Memory conversion
 	assign mem_index = addr - START_ADDRESS;
 
+	// Write data
 	always @ (posedge clk) begin
-		if (addr > START_ADDRESS) begin
-			if (wren) begin
-				mem_block[mem_index] = d_in;
+		if(en) begin
+			if (addr > START_ADDRESS && mem_index < MEM_SIZE) begin
+				if (wren) begin
+					mem_block[mem_index] = d_in[0:7];
+					mem_block[mem_index+1] = d_in[8:15];
+					mem_block[mem_index+2] = d_in[16:23];
+					mem_block[mem_index+3] = d_in[24:31];
+				end
 			end
 		end
 	end
+	
+	// Read data
+	
 
 /*case (acc_size)
 	//2'b00: 
