@@ -8,3 +8,46 @@ z2
 !i10f 100
 cModel Technology
 dd:/modelsim/examples
+vmain_mem
+Z0 !s110 1431483752
+!i10b 1
+!s100 :0idYoc466CP]g9Jb>:7o1
+Ig2c8z_5ANI5g`bJUbN8f`2
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dC:/Users/Nish Krishnan/Documents/429/MIPS-Processor
+w1431483748
+8C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v
+FC:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v
+L0 1
+Z3 OP;L;10.4a;61
+r1
+!s85 0
+31
+Z4 !s108 1431483752.000000
+!s107 C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v|
+!s101 -O0
+!i113 1
+Z5 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
+vmainMem_tb
+R0
+!i10b 1
+!s100 QHZRz23698eSlHhDjQ6mA1
+IQ10X]Bg@IhJC9ehC>7L]10
+R1
+R2
+w1431483212
+8C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v
+FC:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v
+L0 1
+R3
+r1
+!s85 0
+31
+R4
+!s107 C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v|
+!s101 -O0
+!i113 1
+R5
+nmain@mem_tb

@@ -14,20 +14,29 @@ input [0:ACCESS_SIZE-1] 	acc_size;
 output [0:DATA_SIZE-1] 		data_out;
 output 				busy;
 
-reg [0:DATA_SIZE-1] mem_block [0:MEM_SIZE-1];
+reg [0:DATA_SIZE-1] 		mem_block [0:MEM_SIZE-1];
 
+integer i;
+
+initial begin
+	$display ("Initialize memory to zero");
+
+	for (i = 0; i < MEM_SIZE; i = i + 1) begin
+		mem_block[i] = 0;
+	end
+end
 
 always @ (posedge clk) begin
 		
 end
 
-case (acc_size)
-	00: 
-	01:
-	10:
-	11: 
-	default:
-endcase
+/*case (acc_size)
+	//2'b00: 
+	//2'b01:
+	//2'b10:
+	//2'b11: 
+	//default:
+endcase*/
 
 
 endmodule
