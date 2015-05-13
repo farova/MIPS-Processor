@@ -3,7 +3,7 @@ module mainMem_tb();
 	reg clock, wren;
 	wire enable;
 	reg[0:31] addr, data_in;
-	reg[0:2] acc_size;
+	reg[0:1] acc_size;
 
 	wire[0:31] data_out;
 	wire busy;
@@ -18,7 +18,11 @@ module mainMem_tb();
 	// Simulate clock
 	always #10 clock = !clock;
 
-
+	initial begin
+		// Display output, only when value changes
+        	$display("address,\tdata_in,\tdata_out");
+        	$monitor("%h,\t%h,\t%h", addr, data_in, data_out);
+    	end
 
 	
 endmodule

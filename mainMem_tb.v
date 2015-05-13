@@ -18,7 +18,11 @@ module mainMem_tb();
 	// Simulate clock
 	always #10 clock = !clock;
 
-
+	initial begin
+		// Display output, only when value changes
+        	$display("address,\tdata_in,\tdata_out");
+        	$monitor("%h,\t%h,\t%h", addr, data_in, data_out);
+    	end
 
 	
 endmodule
