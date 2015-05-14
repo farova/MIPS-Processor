@@ -1,7 +1,7 @@
 module mainMem_tb();
 
 	reg clock, wren;
-	wire enable;
+	reg enable;
 	reg[0:31] addr, data_in;
 	reg[0:1] acc_size;
 
@@ -14,6 +14,8 @@ module mainMem_tb();
 
 	reg [0:31] captured_data;
 
+	reg[0:31] output_val;
+
 	`define NULL 0
 
 	mainMem dut(clock, addr, data_in, data_out, acc_size, wren, busy, enable);
@@ -22,6 +24,9 @@ module mainMem_tb();
 	initial begin
 		clock = 0;
 		addr = START_ADDRESS - 4;
+		enable = 1;
+		wren = 1;
+		output_val = 32'h0000_0000;
 	end
 
 	initial begin
@@ -30,25 +35,48 @@ module mainMem_tb();
     		$display("data_file handle was NULL");
     		$finish;
  	 	end
+
+ 	 	//scan_file = $fscanf(data_file, "%h\n", captured_data);
 	end
 
 	// Simulate clock
 	always #10 clock = !clock;
 
-	always @(posedge clock) begin
 
-  		scan_file = $fscanf(data_file, "%h\n", captured_data); 
+	initial begin
+		@(posedge clock);
+		wren = 1'b1;
+		addr = 32'h0000_0000;
+		data_in = 32'h55cc_55cc;
+		@(posedge clock);
+		wren = 1'b0;
+		@(posedge clock);
+		if (data_out != 32'h55cc_55cc) begin
+			$display ("Expected value 55cc55cc, actual value %h", data_out);
+		end else begin
+			$display("Store at start of mem block - OK");
+			output_val <= data_out;
+
+		end
+	end
+
+	/*
+	always @(posedge clock) begin
+ 
   		if (!$feof(data_file)) begin
+  			scan_file = $fscanf(data_file, "%h\n", captured_data);
   			addr <= addr + 4;
   			data_in <= captured_data;
     		//use captured_data as you would any other wire or reg value;
   		end
 	end
 
-	initial begin
+	*/
+
+	always @(addr, data_in, data_out) begin
 		// Display output, only when value changes
-        	$display("address,\tdata_in,\tdata_out");
-        	$monitor("%h,\t%h,\t%h", addr, data_in, data_out);
+        	//$display("address,\tdata_in,\tdata_out");
+        	$display("%h,\t%h,\t%h", addr, data_in, output_val);
     end
 
 	
