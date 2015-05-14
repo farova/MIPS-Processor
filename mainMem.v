@@ -19,7 +19,8 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
 	integer 					i, word_counter;
-	wire[0:ADDRESS_SIZE-1]		mem_index, valid_addr;	// translated address index inside memory
+	wire[0:ADDRESS_SIZE-1]		mem_index;	// translated address index inside memory
+	wire valid_addr;
 
 	// Initilization
 	initial begin
@@ -46,6 +47,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 	
+
 	// Read data
 	always @ (negedge clk) begin
 		if(en && !wren && valid_addr) begin
