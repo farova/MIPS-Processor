@@ -13,10 +13,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
-	output reg[0:DATA_SIZE-1] 		d_out;
+	output [0:DATA_SIZE-1] 		d_out;
 	output 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
+	reg [0:DATA_SIZE-1] output_val;
 
 	integer 					i, word_counter;
 	wire[0:ADDRESS_SIZE-1]		mem_index;	// translated address index inside memory
@@ -47,11 +48,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 	
-
+	assign d_out = output_val;
 	// Read data
 	always @ (negedge clk) begin
 		if(en && !wren && valid_addr) begin
-			d_out = { mem_block[mem_index],
+			output_val = { mem_block[mem_index],
 				mem_block[mem_index+1],
 				mem_block[mem_index+2],
 				mem_block[mem_index+3] };
