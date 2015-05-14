@@ -13,12 +13,13 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
-	output [0:DATA_SIZE-1] 		d_out;
+	output reg[0:DATA_SIZE-1] 		d_out;
 	output 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
-	integer 					i, word_counter;
+	wire						new_word;
+	integer 					i, word_counter, total_word;
 	wire[0:ADDRESS_SIZE-1]		mem_index, valid_addr;	// translated address index inside memory
 
 	// Initilization
@@ -35,7 +36,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	
 	// control signals
 	assign valid_addr = addr > START_ADDRESS && mem_index < MEM_SIZE;
-
+	
+	// Burst mode control
+	assign word_counter = new_word ? 0 : word_counter;
+	
 	// Write data
 	always @ (posedge clk) begin
 		if(en && wren && valid_addr) begin
@@ -56,13 +60,17 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end	
 	end
 
-/*case (acc_size)
-	//2'b00: 
-	//2'b01:
-	//2'b10:
-	//2'b11: 
-	//default:
-endcase*/
-
+	always @ (acc_size) begin
+		case (acc_size)
+			2'b01:
+				total_word = 4;
+			2'b10:
+				total_word = 8;
+			2'b11:
+				total_word = 16;
+			default:
+				total_word = 1;
+		endcase
+	end
 
 endmodule
