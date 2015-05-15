@@ -17,7 +17,6 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	output reg 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
-	wire [0:DATA_SIZE-1] output_val;
 
 	wire [0:3] num_words;
 	reg [0:5] counter;
@@ -53,6 +52,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	// control signals
 	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
 
+
+	/*data_out needs to be combinational for burst reads to work. This is because since counter is a register
+	it will be zero in the first cycle since it takes a cycle for counter's real value to appear. Since in the first cycle,
+	counter is zero, we would be able to retrieve the data at (start_index + 0). */
 	assign d_out = (!wren && valid_addr && enable)?
 				{ mem_block[mem_index],
 				mem_block[mem_index+1],
@@ -73,7 +76,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 
-	//reset the counter
+	//reset the counter when enable is off, this is the only way i can think of to reset this bitch
 	always @ (posedge clk) begin
 		if (!enable) begin
 			counter <= 3'b000;
@@ -96,5 +99,13 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
 							4'hf;
+
+
+	/* THINGS TO DO STILL:
+			- turning enable off should not affect any ongoing memory operations
+			- access size needs to be related to writes for burst writes which im not sure how
+			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
+			busy doesnt have to be one for that one cycle... so its confusing
+	*/
 
 endmodule
