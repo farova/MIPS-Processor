@@ -13,15 +13,20 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
-	output [0:DATA_SIZE-1] 		d_out;
-	output 				busy;
+	output[0:DATA_SIZE-1] 		d_out;
+	output reg 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
-	reg [0:DATA_SIZE-1] output_val;
+	wire [0:DATA_SIZE-1] output_val;
 
-	integer 					i, word_counter, total_word;
+	wire [0:3] num_words;
+	reg [0:3] counter;
+	wire enable;
 
-	wire[0:ADDRESS_SIZE-1]		mem_index;	// translated address index inside memory
+	integer 					i;
+
+	wire[0:ADDRESS_SIZE-1]  mem_index;	// translated address index inside memory
+	wire[0:ADDRESS_SIZE-1] mem_index;
 	wire valid_addr;
 
 	// Initilization
@@ -31,57 +36,52 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		for (i = 0; i < MEM_SIZE; i = i + 1) begin
 			mem_block[i] = 0;
 		end
+		counter = 0;
+
 	end
 
 	// Memory conversion
 	assign mem_index = addr - START_ADDRESS;
+
+	assign enable = (busy == 0) ? en : !en;
 	
 	// control signals
-	assign valid_addr = addr > START_ADDRESS && mem_index < MEM_SIZE;
+	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
+
+	assign d_out = (!wren && valid_addr && enable)?
+				{ mem_block[mem_index],
+				mem_block[mem_index+1],
+				mem_block[mem_index+2],
+				mem_block[mem_index+3] } : 32'h0000_0000;
 	
 	// Write data
 	always @ (posedge clk) begin
-		if(en && wren && valid_addr && word_counter < total_word) begin
-			mem_block[mem_index] = d_in[0:7];
-			mem_block[mem_index+1] = d_in[8:15];
-			mem_block[mem_index+2] = d_in[16:23];
-			mem_block[mem_index+3] = d_in[24:31];
+
+		if (enable && valid_addr) begin
+			if(wren) begin
+				mem_block[mem_index] = d_in[0:7];
+				mem_block[mem_index+1] = d_in[8:15];
+				mem_block[mem_index+2] = d_in[16:23];
+				mem_block[mem_index+3] = d_in[24:31];
+			end
 		end
-		
-		if(word_counter == total_word) begin
-			word_counter = 0;
+	end
+
+	always @ (negedge clk) begin
+		if (counter < num_words) begin
+			counter <= counter + 1;
+			busy = 1;
+		end else begin
+			busy = 0;
 		end
 	end
 	
-	assign d_out = output_val;
-	// Read data
-	always @ (negedge clk) begin
+	assign num_words = 
+		(acc_size == 2'b00)? 4'h0:
+		(acc_size == 2'b01)? 4'h3:
+		(acc_size == 2'b10)? 4'h7:
+							4'hf;
 
-		if(en && !wren && valid_addr && word_counter < total_word) begin
-			output_val = { mem_block[mem_index],
-				mem_block[mem_index+1],
-				mem_block[mem_index+2],
-				mem_block[mem_index+3] };
-				
-			word_counter = word_counter + 1;
-		end	
-		
-		if(word_counter == total_word) begin
-			word_counter = 0;
-		end
-	end
-
-	always @ (acc_size) begin
-		case (acc_size)
-			2'b01:
-				total_word = 4;
-			2'b10:
-				total_word = 8;
-			2'b11:
-				total_word = 16;
-			default:
-				total_word = 1;
-		endcase
-	end
+	// somehow reset counter
 
 endmodule

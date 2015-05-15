@@ -44,20 +44,35 @@ module mainMem_tb();
 
 
 	initial begin
+		// LOAD AT TOP OF MEMORY
 		@(posedge clock);
 		wren = 1'b1;
-		addr = 32'h0000_0000;
+		addr = 32'h80020000;
+		data_in = 32'h55cc_55cc;
+		@(posedge clock);
+		wren = 1'b0;
+		acc_size = 2'b01;
+		@(posedge clock);
+		if (data_out == 32'h55cc_55cc) begin
+			$display("Store at %h mem block - OK", addr);
+			output_val <= data_out;
+		end else begin
+			$display ("Expected value is 55cc55cc, actual value is %h", data_out);
+		end
+
+		/*@(posedge clock);
+		wren = 1'b1;
+		addr = 32'h80020000;
 		data_in = 32'h55cc_55cc;
 		@(posedge clock);
 		wren = 1'b0;
 		@(posedge clock);
-		if (data_out != 32'h55cc_55cc) begin
-			$display ("Expected value 55cc55cc, actual value %h", data_out);
-		end else begin
-			$display("Store at start of mem block - OK");
+		if (data_out == 32'h55cc_55cc) begin
+			$display("Store at %h mem block - OK", addr);
 			output_val <= data_out;
-
-		end
+		end else begin
+			$display ("Expected value is 55cc55cc, actual value is %h", data_out);
+		end*/
 	end
 
 	/*
@@ -76,7 +91,7 @@ module mainMem_tb();
 	always @(addr, data_in, data_out) begin
 		// Display output, only when value changes
         	//$display("address,\tdata_in,\tdata_out");
-        	$display("%h,\t%h,\t%h", addr, data_in, output_val);
+        	$display("%h,\t%h,\t%h", addr, data_in, data_out);
     end
 
 	
