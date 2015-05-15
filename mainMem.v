@@ -101,10 +101,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 
 	/* THINGS TO DO STILL:
-			- turning enable off should not affect any ongoing memory operations
-			- access size needs to be related to writes for burst writes which im not sure how
+			- make busy comb instead of reg to account for back to back operations
+			- turning enable off should not affect any ongoing memory operations (enable || busy)
 			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
-			busy doesnt have to be one for that one cycle... so its confusing
+			busy doesnt have to be one for that one cycle... so its confusings
 			- Reset counter based on changes in addr, which should be a registered value on rising edge
 	*/
 
