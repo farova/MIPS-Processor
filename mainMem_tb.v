@@ -76,23 +76,29 @@ module mainMem_tb();
 		enable = 1;
 		wren = 1'b1;
 		addr = 32'h80020004;
+		acc_size = 2'b01;
 		data_in = 32'h55cc_55cd;
 
 		@(posedge clock);
 
-		addr = 32'h80020008;
 		data_in = 32'h55cc_55ce;
 
 		@(posedge clock);
 
-		addr = 32'h8002000c;
 		data_in = 32'h55cc_55cf;
+
+		@(posedge clock);
+
+		data_in = 32'h55cc_55c1;
 
 		@(posedge clock);
 
 		addr = 32'h80020000;		
 		wren = 1'b0;
-		acc_size = 2'b01;
+
+		@(posedge clock);
+
+		//waste mon
 
 		@(posedge clock);
 
