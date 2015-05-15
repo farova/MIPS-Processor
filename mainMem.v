@@ -16,22 +16,17 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	output[0:DATA_SIZE-1] 		d_out;
 	output reg 				busy;
 
-<<<<<<< HEAD
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 	wire [0:DATA_SIZE-1] output_val;
-=======
-	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
-	reg [0:DATA_SIZE-1] output_val;
->>>>>>> c695340727f1128cc78dbd04090c5bb758c92182
 
 	wire [0:3] num_words;
-	reg [0:3] counter;
+	reg [0:5] counter;
 	wire enable;
 
 	integer 					i;
 
 	wire[0:ADDRESS_SIZE-1]  mem_index;	// translated address index inside memory
-	wire[0:ADDRESS_SIZE-1] mem_index;
+	wire[0:ADDRESS_SIZE-1] start_index;
 	wire valid_addr;
 
 	// Initilization
@@ -46,9 +41,14 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	end
 
 	// Memory conversion
-	assign mem_index = addr - START_ADDRESS;
+	assign start_index = addr - START_ADDRESS;
 
-	assign enable = (busy == 0) ? en : !en;
+
+	// we need to use this wire to figure out how to make sure that enable cant change while this shit is busy
+	assign enable = en;
+
+	//increments memory index to do burst reads
+	assign mem_index = start_index + counter;
 	
 	// control signals
 	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
@@ -58,8 +58,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 				mem_block[mem_index+1],
 				mem_block[mem_index+2],
 				mem_block[mem_index+3] } : 32'h0000_0000;
-	
-	assign busy = en && valid_addr && word_counter < total_word;
+
 	
 	// Write data
 	always @ (posedge clk) begin
@@ -74,21 +73,28 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 
-	always @ (negedge clk) begin
-		if (counter < num_words) begin
-			counter <= counter + 1;
+	//reset the counter
+	always @ (posedge clk) begin
+		if (!enable) begin
+			counter <= 3'b000;
+		end
+	end
+
+	//increment counter on negative edge and set busy flag
+	always @ (posedge clk) begin
+		if (counter < (num_words << 2)) begin
+			counter <= counter + 3'b100; 
 			busy = 1;
 		end else begin
 			busy = 0;
 		end
 	end
 	
+	// assign number of words to read based on access size
 	assign num_words = 
 		(acc_size == 2'b00)? 4'h0:
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
 							4'hf;
-
-	// somehow reset counter
 
 endmodule

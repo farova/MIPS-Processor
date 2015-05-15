@@ -6,4 +6,5 @@ add wave data_out
 add wave wren
 add wave dut/counter
 add wave dut/acc_size
+add wave dut/enable
 add wave busy

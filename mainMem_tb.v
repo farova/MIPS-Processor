@@ -51,28 +51,74 @@ module mainMem_tb();
 		data_in = 32'h55cc_55cc;
 		@(posedge clock);
 		wren = 1'b0;
-		acc_size = 2'b01;
+		acc_size = 2'b00;
 		@(posedge clock);
 		if (data_out == 32'h55cc_55cc) begin
-			$display("Store at %h mem block - OK", addr);
+			$display("Retrieved at starting address: %h - PASS", addr);
 			output_val <= data_out;
 		end else begin
 			$display ("Expected value is 55cc55cc, actual value is %h", data_out);
 		end
+		enable = 0;
 
-		/*@(posedge clock);
-		wren = 1'b1;
-		addr = 32'h80020000;
-		data_in = 32'h55cc_55cc;
+		// Test Burst Read for 4 words
+
 		@(posedge clock);
+		enable = 1;
+		wren = 1'b1;
+		addr = 32'h80020004;
+		data_in = 32'h55cc_55cd;
+		@(posedge clock);
+		addr = 32'h80020008;
+		data_in = 32'h55cc_55ce;
+		@(posedge clock);
+		addr = 32'h8002000c;
+		data_in = 32'h55cc_55cf;
+		@(posedge clock);
+		addr = 32'h80020000;		
 		wren = 1'b0;
+		acc_size = 2'b01;
 		@(posedge clock);
 		if (data_out == 32'h55cc_55cc) begin
-			$display("Store at %h mem block - OK", addr);
+			$display("Retrieved 1st value at starting address: %h - PASS", addr);
 			output_val <= data_out;
 		end else begin
 			$display ("Expected value is 55cc55cc, actual value is %h", data_out);
-		end*/
+		end
+		@(posedge clock);
+		if (data_out == 32'h55cc_55cd) begin
+			$display("Retrieved 2nd value at starting address: %h - PASS", addr);
+			output_val <= data_out;
+		end else begin
+			$display ("Expected value is 55cc55cd, actual value is %h", data_out);
+		end
+		@(posedge clock);
+		if (data_out == 32'h55cc_55ce) begin
+			$display("Retrieved 3rd value at starting address: %h - PASS", addr);
+			output_val <= data_out;
+		end else begin
+			$display ("Expected value is 55cc55ce, actual value is %h", data_out);
+		end
+		@(posedge clock);
+		if (data_out == 32'h55cc_55cf) begin
+			$display("Retrieved 4th value at starting address: %h - PASS", addr);
+			output_val <= data_out;
+		end else begin
+			$display ("Expected value is 55cc55cf, actual value is %h", data_out);
+		end
+		enable = 0;
+
+		/*
+		@(posedge clock);
+		enable = 1;
+		wren = 1'b1;
+		addr = 32'h8002000c;
+		data_in = 32'h55cc_55ce;
+		@(posedge clock);
+		addr = 32'h80020000;		
+		wren = 1'b0;
+		acc_size = 2'b01;*/
+
 	end
 
 	/*
