@@ -10,10 +10,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	input	 			clk, wren, en;
 	input [0:ADDRESS_SIZE-1] 	addr;
+	reg [0:ADDRESS_SIZE-1] addr_reg;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
-	output[0:DATA_SIZE-1] 		d_out;
+	output reg[0:DATA_SIZE-1] 		d_out;
 	output reg 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
@@ -53,14 +54,15 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
 
 
+
 	/*data_out needs to be combinational for burst reads to work. This is because since counter is a register
 	it will be zero in the first cycle since it takes a cycle for counter's real value to appear. Since in the first cycle,
 	counter is zero, we would be able to retrieve the data at (start_index + 0). */
-	assign d_out = (!wren && valid_addr && enable)?
+	/*assign d_out = (!wren && valid_addr && enable)?
 				{ mem_block[mem_index],
 				mem_block[mem_index+1],
 				mem_block[mem_index+2],
-				mem_block[mem_index+3] } : 32'h0000_0000;
+				mem_block[mem_index+3] } : 32'h0000_0000;*/
 
 	
 	// Write data
@@ -72,15 +74,19 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 				mem_block[mem_index+1] = d_in[8:15];
 				mem_block[mem_index+2] = d_in[16:23];
 				mem_block[mem_index+3] = d_in[24:31];
+			end else begin
+				d_out = (!wren && valid_addr && enable)?
+					{ mem_block[mem_index],
+					mem_block[mem_index+1],
+					mem_block[mem_index+2],
+					mem_block[mem_index+3] } : 32'h0000_0000;
 			end
 		end
 	end
 
 	//reset the counter when enable is off, this is the only way i can think of to reset this bitch
-	always @ (posedge clk) begin
-		if (!enable) begin
-			counter <= 3'b000;
-		end
+	always @ (addr_reg) begin
+		counter <= 3'b000;
 	end
 
 	//increment counter on negative edge and set busy flag
@@ -91,6 +97,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end else begin
 			busy = 0;
 		end
+	end
+
+	always @(posedge clk) begin
+		addr_reg <= addr;
 	end
 	
 	// assign number of words to read based on access size
