@@ -3,18 +3,18 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	parameter ACCESS_SIZE 	= 2;
 	parameter ADDRESS_SIZE 	= 32;
 	parameter DATA_SIZE 	= 32;
-	parameter MEM_SIZE 	= 1048578; // 1MB
+	parameter MEM_SIZE 		= 1048578; // 1MB
 	parameter MEM_WIDTH 	= 8;
 
 	parameter START_ADDRESS = 32'h80020000;
 
-	input	 			clk, wren, en;
+	input	 					clk, wren, en;
 	input [0:ADDRESS_SIZE-1] 	addr;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
 	output[0:DATA_SIZE-1] 		d_out;
-	output reg 				busy;
+	output reg 					busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
@@ -24,8 +24,8 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	integer 					i;
 
-	wire[0:ADDRESS_SIZE-1]  mem_index;	// translated address index inside memory
-	wire[0:ADDRESS_SIZE-1] start_index;
+	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
+	wire[0:ADDRESS_SIZE-1] 		start_index;
 	wire valid_addr;
 
 	// Initilization
@@ -42,8 +42,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	// Memory conversion
 	assign start_index = addr - START_ADDRESS;
 
-
-	// we need to use this wire to figure out how to make sure that enable cant change while this shit is busy
+	// we need to use this wire to figure out how to make sure that enable cant change while this is busy
 	assign enable = en;
 
 	//increments memory index to do burst reads
@@ -76,7 +75,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 
-	//reset the counter when enable is off, this is the only way i can think of to reset this bitch
+	//reset the counter when enable is off, this is the only way i can think of to reset this
 	always @ (posedge clk) begin
 		if (!enable) begin
 			counter <= 3'b000;
@@ -98,7 +97,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		(acc_size == 2'b00)? 4'h0:
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
-							4'hf;
+							 4'hf;
 
 
 	/* THINGS TO DO STILL:
@@ -106,6 +105,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 			- access size needs to be related to writes for burst writes which im not sure how
 			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
 			busy doesnt have to be one for that one cycle... so its confusing
+			- Reset counter based on changes in addr, which should be a registered value on rising edge
 	*/
 
 endmodule
