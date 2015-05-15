@@ -16,8 +16,13 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	output[0:DATA_SIZE-1] 		d_out;
 	output reg 				busy;
 
+<<<<<<< HEAD
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 	wire [0:DATA_SIZE-1] output_val;
+=======
+	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
+	reg [0:DATA_SIZE-1] output_val;
+>>>>>>> c695340727f1128cc78dbd04090c5bb758c92182
 
 	wire [0:3] num_words;
 	reg [0:3] counter;
@@ -53,6 +58,8 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 				mem_block[mem_index+1],
 				mem_block[mem_index+2],
 				mem_block[mem_index+3] } : 32'h0000_0000;
+	
+	assign busy = en && valid_addr && word_counter < total_word;
 	
 	// Write data
 	always @ (posedge clk) begin
