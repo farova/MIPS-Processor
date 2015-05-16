@@ -3,19 +3,19 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	parameter ACCESS_SIZE 	= 2;
 	parameter ADDRESS_SIZE 	= 32;
 	parameter DATA_SIZE 	= 32;
-	parameter MEM_SIZE 		= 1048578; // 1MB
+	parameter MEM_SIZE 	= 1048578; // 1MB
 	parameter MEM_WIDTH 	= 8;
 
 	parameter START_ADDRESS = 32'h80020000;
 
-	input	 					clk, wren, en;
+	input	 			clk, wren, en;
 	input [0:ADDRESS_SIZE-1] 	addr;
-	reg [0:ADDRESS_SIZE-1] addr_reg;
+	reg [0:ADDRESS_SIZE-1] 		addr_reg;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
 	output reg[0:DATA_SIZE-1] 	d_out;
-	output reg 					busy;
+	output 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
@@ -23,7 +23,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	reg [0:5] counter;
 	wire enable;
 
-	integer 					i;
+	integer 			i;
 
 	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
 	wire[0:ADDRESS_SIZE-1] 		start_index;
@@ -88,13 +88,12 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		counter <= 3'b000;
 	end
 
-	//increment counter on negative edge and set busy flag
+	assign busy = counter < (num_words << 2) ? 1 : 0;
+
+	//increment counter on negative edg
 	always @ (posedge clk) begin
 		if (counter < (num_words << 2)) begin
-			counter <= counter + 3'b100; 
-			busy = 1;
-		end else begin
-			busy = 0;
+			counter <= counter + 3'b100;
 		end
 	end
 
@@ -111,7 +110,6 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 
 	/* THINGS TO DO STILL:
-			- make busy comb instead of reg to account for back to back operations
 			- turning enable off should not affect any ongoing memory operations (enable || busy)
 			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
 			busy doesnt have to be one for that one cycle... so its confusings
