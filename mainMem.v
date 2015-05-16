@@ -67,7 +67,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	// Write data
 	always @ (posedge clk) begin
 
-		if (enable && valid_addr) begin
+		if ((enable || busy) && valid_addr) begin
 			if(wren) begin
 				mem_block[mem_index] = d_in[0:7];
 				mem_block[mem_index+1] = d_in[8:15];
@@ -110,10 +110,8 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 
 	/* THINGS TO DO STILL:
-			- turning enable off should not affect any ongoing memory operations (enable || busy)
 			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
 			busy doesnt have to be one for that one cycle... so its confusings
-			- Reset counter based on changes in addr, which should be a registered value on rising edge
 	*/
 
 endmodule
