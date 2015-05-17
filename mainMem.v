@@ -18,6 +18,8 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	output 				busy;
 	wire 				busy_wire;
 
+	reg reset_counter;
+
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
 	wire [0:3] num_words;
