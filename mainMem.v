@@ -1,4 +1,4 @@
-module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
+module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	
 	parameter ACCESS_SIZE 	= 2;
 	parameter ADDRESS_SIZE 	= 32;
@@ -8,21 +8,18 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	parameter START_ADDRESS = 32'h80020000;
 
-	input	 			clk, wren, en;
+	input	 			clk, wren, enable;
 	input [0:ADDRESS_SIZE-1] 	addr;
-	reg [0:ADDRESS_SIZE-1] 		addr_reg;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
 	output reg[0:DATA_SIZE-1] 	d_out;
 	output 				busy;
-	wire 				busy_wire;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
 	wire [0:3] num_words;
 	reg [0:5] counter;
-	wire enable;
 
 	integer 			i;
 
@@ -32,20 +29,17 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	// Initilization
 	initial begin
-		$display ("Initialize memory to zero");
-
+		// Initialize memory to 0
 		for (i = 0; i < MEM_SIZE; i = i + 1) begin
 			mem_block[i] = 0;
 		end
+		
 		counter = 0;
 
 	end
 
 	// Memory conversion
 	assign start_index = addr - START_ADDRESS;
-
-	// we need to use this wire to figure out how to make sure that enable cant change while this is busy
-	assign enable = en;
 
 	//increments memory index to do burst reads
 	assign mem_index = start_index + counter;
@@ -79,7 +73,6 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	end
 
 	assign busy = counter <= (num_words << 2) ? 1 : 0;
-
 
 	// assign number of words to read based on access size
 	assign num_words = 
