@@ -10,12 +10,12 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	input	 			clk, wren, en;
 	input [0:ADDRESS_SIZE-1] 	addr;
-	reg [0:ADDRESS_SIZE-1] addr_reg;
+	reg [0:ADDRESS_SIZE-1] 		addr_reg;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
-	output reg[0:DATA_SIZE-1] 		d_out;
-	output reg 				busy;
+	output reg[0:DATA_SIZE-1] 	d_out;
+	output 				busy;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
@@ -23,10 +23,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	reg [0:5] counter;
 	wire enable;
 
-	integer 					i;
+	integer 			i;
 
-	wire[0:ADDRESS_SIZE-1]  mem_index;	// translated address index inside memory
-	wire[0:ADDRESS_SIZE-1] start_index;
+	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
+	wire[0:ADDRESS_SIZE-1] 		start_index;
 	wire valid_addr;
 
 	// Initilization
@@ -43,8 +43,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	// Memory conversion
 	assign start_index = addr - START_ADDRESS;
 
-
-	// we need to use this wire to figure out how to make sure that enable cant change while this shit is busy
+	// we need to use this wire to figure out how to make sure that enable cant change while this is busy
 	assign enable = en;
 
 	//increments memory index to do burst reads
@@ -68,7 +67,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	// Write data
 	always @ (posedge clk) begin
 
-		if (enable && valid_addr) begin
+		if ((enable || busy) && valid_addr) begin
 			if(wren) begin
 				mem_block[mem_index] = d_in[0:7];
 				mem_block[mem_index+1] = d_in[8:15];
@@ -84,18 +83,17 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		end
 	end
 
-	//reset the counter when enable is off, this is the only way i can think of to reset this bitch
+	//reset the counter when enable is off, this is the only way i can think of to reset this
 	always @ (addr_reg) begin
 		counter <= 3'b000;
 	end
 
-	//increment counter on negative edge and set busy flag
+	assign busy = counter < (num_words << 2) ? 1 : 0;
+
+	//increment counter on negative edg
 	always @ (posedge clk) begin
 		if (counter < (num_words << 2)) begin
-			counter <= counter + 3'b100; 
-			busy = 1;
-		end else begin
-			busy = 0;
+			counter <= counter + 3'b100;
 		end
 	end
 
@@ -108,14 +106,12 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 		(acc_size == 2'b00)? 4'h0:
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
-							4'hf;
+							 4'hf;
 
 
 	/* THINGS TO DO STILL:
-			- turning enable off should not affect any ongoing memory operations
-			- access size needs to be related to writes for burst writes which im not sure how
 			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
-			busy doesnt have to be one for that one cycle... so its confusing
+			busy doesnt have to be one for that one cycle... so its confusings
 	*/
 
 endmodule
