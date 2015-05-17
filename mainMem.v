@@ -16,6 +16,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 	output reg[0:DATA_SIZE-1] 	d_out;
 	output 				busy;
+	wire 				busy_wire;
 
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
@@ -51,21 +52,15 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 	
 	// control signals
 	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
-
-
-
-	/*data_out needs to be combinational for burst reads to work. This is because since counter is a register
-	it will be zero in the first cycle since it takes a cycle for counter's real value to appear. Since in the first cycle,
-	counter is zero, we would be able to retrieve the data at (start_index + 0). */
-	/*assign d_out = (!wren && valid_addr && enable)?
-				{ mem_block[mem_index],
-				mem_block[mem_index+1],
-				mem_block[mem_index+2],
-				mem_block[mem_index+3] } : 32'h0000_0000;*/
-
 	
 	// Write data
 	always @ (posedge clk) begin
+
+		if (counter >= (num_words << 2)) begin
+			counter <= 3'b000;
+		end else begin
+			counter <= counter + 3'b100;
+		end
 
 		if ((enable || busy) && valid_addr) begin
 			if(wren) begin
@@ -74,33 +69,18 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 				mem_block[mem_index+2] = d_in[16:23];
 				mem_block[mem_index+3] = d_in[24:31];
 			end else begin
-				d_out = (!wren && valid_addr && enable)?
+				d_out = 
 					{ mem_block[mem_index],
 					mem_block[mem_index+1],
 					mem_block[mem_index+2],
-					mem_block[mem_index+3] } : 32'h0000_0000;
+					mem_block[mem_index+3] };
 			end
 		end
 	end
 
-	//reset the counter when enable is off, this is the only way i can think of to reset this
-	always @ (addr_reg) begin
-		counter <= 3'b000;
-	end
+	assign busy = counter <= (num_words << 2) ? 1 : 0;
 
-	assign busy = counter < (num_words << 2) ? 1 : 0;
 
-	//increment counter on negative edg
-	always @ (posedge clk) begin
-		if (counter < (num_words << 2)) begin
-			counter <= counter + 3'b100;
-		end
-	end
-
-	always @(posedge clk) begin
-		addr_reg <= addr;
-	end
-	
 	// assign number of words to read based on access size
 	assign num_words = 
 		(acc_size == 2'b00)? 4'h0:
@@ -110,8 +90,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, en);
 
 
 	/* THINGS TO DO STILL:
-			- busy turns on a cycle late, not sure if thats a problem because apparently if were only retrieving one value, 
-			busy doesnt have to be one for that one cycle... so its confusings
+			- busy never deasserts currently..... so shit just goes on forever. 
 	*/
 
 endmodule

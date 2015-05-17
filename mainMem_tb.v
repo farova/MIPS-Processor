@@ -27,6 +27,7 @@ module mainMem_tb();
 		addr = START_ADDRESS - 4;
 		enable = 1;
 		wren = 1;
+		acc_size = 2'b00;
 		output_val = 32'h0000_0000;
 	end
 
@@ -51,11 +52,15 @@ module mainMem_tb();
 		wren = 1'b1;
 		addr = 32'h80020000;
 		data_in = 32'h55cc_55cc;
+		acc_size = 2'b00;
 
 		@(posedge clock);
 
 		wren = 1'b0;
 		acc_size = 2'b00;
+		
+		@(posedge clock);
+		// waste mon
 
 		@(posedge clock);
 
