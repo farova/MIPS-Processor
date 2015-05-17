@@ -16,6 +16,10 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	output reg[0:DATA_SIZE-1] 	d_out;
 	output 				busy;
 
+	reg [0:ADDRESS_SIZE-1]		addr_reg;
+	reg [0:ACCESS_SIZE-1] 		acc_size_reg;
+	reg							wren_reg;
+	
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
 	wire [0:3] num_words;
@@ -50,9 +54,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	// Write data
 	always @ (posedge clk) begin
 
-		if (counter >= (num_words << 2)) begin
-			counter <= 3'b000;
-		end else begin
+		if (counter < (num_words << 2)) begin
 			counter <= counter + 3'b100;
 		end
 
@@ -72,7 +74,18 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 		end
 	end
 
-	assign busy = counter <= (num_words << 2) ? 1 : 0;
+	assign busy = counter < (num_words << 2) ? 1 : 0;
+
+	//reset the counter
+	always @ (addr_reg, acc_size_reg, wren_reg) begin
+		counter <= 3'b000;
+	end
+	
+	always @(negedge clk) begin
+		addr_reg <= addr;
+		acc_size_reg <= acc_size;
+		wren_reg <= wren;
+	end
 
 	// assign number of words to read based on access size
 	assign num_words = 

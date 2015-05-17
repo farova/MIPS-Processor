@@ -31,7 +31,7 @@ module mainMem_tb();
 		output_val = 32'h0000_0000;
 	end
 
-	// Opens file for read, we should prolly close this shit somewhere
+	// Opens file for read, we should prolly close this somewhere
 	initial begin
   		data_file = $fopen("bench-v1/SimpleAdd.x", "r");
   	 	if (data_file == `NULL) begin
