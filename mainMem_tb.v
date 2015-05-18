@@ -19,7 +19,7 @@ module mainMem_tb();
 	`define NULL 0
 
 	// defining our memory module
-	Mem dut(clock, addr, data_in, data_out, acc_size, wren, busy, enable);
+	mainMem dut(clock, addr, data_in, data_out, acc_size, wren, busy, enable);
 
 	// Initilization of values
 	initial begin

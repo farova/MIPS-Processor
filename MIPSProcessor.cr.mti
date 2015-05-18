@@ -1,11 +1,18 @@
-{C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/memory.v} {0 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/memory.v}
+{C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module Mem
-** Error: C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/memory.v(12): Port mode is incompatible with declaration: wren
-** Error: C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/memory.v(13): Port mode is incompatible with declaration: addr
-** Error: C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/memory.v(16): Port mode is incompatible with declaration: acc_size
+-- Compiling module mainMem
 
-} {4.0 7.0} {}} F:/Development/MIPS-Processor/mainMem_tb.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/mainMem_tb.v
+Top level modules:
+	mainMem
+
+} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mainMem_tb
+
+Top level modules:
+	mainMem_tb
+
+} {} {}} F:/Development/MIPS-Processor/mainMem_tb.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/mainMem_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module mainMem_tb
 
