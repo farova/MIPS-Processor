@@ -18,18 +18,18 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 
 	reg [0:ADDRESS_SIZE-1]		addr_reg;
 	reg [0:ACCESS_SIZE-1] 		acc_size_reg;
-	reg							wren_reg;
+	reg				wren_reg;
 	
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
-	wire [0:3] num_words;
-	reg [0:5] counter;
+	wire [0:3] 			num_words;
+	reg [0:5] 			counter;
 
 	integer 			i;
 
 	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
 	wire[0:ADDRESS_SIZE-1] 		start_index;
-	wire valid_addr;
+	wire 				valid_addr;
 
 	// Initilization
 	initial begin
@@ -92,11 +92,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 		(acc_size == 2'b00)? 4'h0:
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
-							 4'hf;
+					4'hf;
 
 
 	/* THINGS TO DO STILL:
-			- busy never deasserts currently..... so shit just goes on forever. 
+			- busy deasserts 1 cycle too early 
 	*/
 
 endmodule
