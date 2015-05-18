@@ -14,7 +14,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
 	output reg[0:DATA_SIZE-1] 	d_out;
-	output 				busy;
+	output reg			busy;
 
 	reg [0:ADDRESS_SIZE-1]		addr_reg;
 	reg [0:ACCESS_SIZE-1] 		acc_size_reg;
@@ -56,6 +56,9 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 
 		if (counter < num_words) begin
 			counter <= counter + 1;
+			busy = 1;
+		end else begin
+			busy = 0;
 		end
 
 		if ((enable || busy) && valid_addr) begin
@@ -73,8 +76,6 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 			end
 		end
 	end
-
-	assign busy = counter < num_words ? 1 : 0;
 
 	//reset the counter
 	always @ (addr_reg, acc_size_reg, wren_reg) begin
