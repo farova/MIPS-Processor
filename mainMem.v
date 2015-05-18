@@ -14,24 +14,24 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
 	output reg[0:DATA_SIZE-1] 	d_out;
-	output 				busy;
+	output reg			busy;
 
 	reg reset_counter;
 
 	reg [0:ADDRESS_SIZE-1]		addr_reg;
 	reg [0:ACCESS_SIZE-1] 		acc_size_reg;
-	reg							wren_reg;
+	reg				wren_reg;
 	
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
-	wire [0:3] num_words;
-	reg [0:5] counter;
+	wire [0:3] 			num_words;
+	reg [0:5] 			counter;
 
 	integer 			i;
 
 	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
 	wire[0:ADDRESS_SIZE-1] 		start_index;
-	wire valid_addr;
+	wire 				valid_addr;
 
 	// Initilization
 	initial begin
@@ -48,7 +48,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	assign start_index = addr - START_ADDRESS;
 
 	//increments memory index to do burst reads
-	assign mem_index = start_index + counter;
+	assign mem_index = start_index + (counter << 2);
 	
 	// control signals
 	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
@@ -56,8 +56,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	// Write data
 	always @ (posedge clk) begin
 
-		if (counter < (num_words << 2)) begin
-			counter <= counter + 3'b100;
+		if (counter < num_words) begin
+			counter <= counter + 1;
+			busy = 1;
+		end else begin
+			busy = 0;
 		end
 
 		if ((enable || busy) && valid_addr) begin
@@ -76,11 +79,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 		end
 	end
 
-	assign busy = counter < (num_words << 2) ? 1 : 0;
-
 	//reset the counter
 	always @ (addr_reg, acc_size_reg, wren_reg) begin
-		counter <= 3'b000;
+		if (enable) begin
+			counter <= 3'b000;
+		end
 	end
 	
 	always @(negedge clk) begin
@@ -94,11 +97,11 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 		(acc_size == 2'b00)? 4'h0:
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
-							 4'hf;
+					4'hf;
 
 
 	/* THINGS TO DO STILL:
-			- busy never deasserts currently..... so shit just goes on forever. 
+			- busy deasserts 1 cycle too early 
 	*/
 
 endmodule

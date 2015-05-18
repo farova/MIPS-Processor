@@ -4,6 +4,7 @@ module mainMem_tb();
 	reg enable;
 	reg[0:31] addr, data_in;
 	reg[0:1] acc_size;
+	reg[0:31] tempaddr;
 
 	wire[0:31] data_out;
 	wire busy;
@@ -12,11 +13,43 @@ module mainMem_tb();
 
 	integer data_file, scan_file;
 
+	integer loop_count;
+
+	reg eof_flag;
+
+	integer counter;
+
+	reg[0:21*8] filename;
+
 	reg [0:31] captured_data;
 
 	reg[0:31] output_val;
 
+	reg [0:31] 		captured_data_blk [0:15];
+
 	`define NULL 0
+
+	task OpenFile;
+		begin
+			data_file = $fopen(filename, "r");
+  	 		if (data_file == `NULL) begin
+    			$display("data_file handle was NULL");
+    			$finish;
+ 	 		end
+		end
+	endtask
+
+	task ReadFile;
+		begin
+			if (!$feof(data_file)) begin
+  				scan_file = $fscanf(data_file, "%h\n", captured_data);
+  				eof_flag = 1'b0;
+  			end else begin
+  				$display("Reached the end of file!");
+  				eof_flag = 1'b1;
+  			end
+		end
+	endtask
 
 	// defining our memory module
 	mainMem dut(clock, addr, data_in, data_out, acc_size, wren, busy, enable);
@@ -33,11 +66,8 @@ module mainMem_tb();
 
 	// Opens file for read, we should prolly close this somewhere
 	initial begin
-  		data_file = $fopen("bench-v1/SimpleAdd.x", "r");
-  	 	if (data_file == `NULL) begin
-    		$display("data_file handle was NULL");
-    		$finish;
- 	 	end
+		filename = "bench-v2/SumArray.x";
+  		OpenFile();
 	end
 
 	// Simulate clock
@@ -46,13 +76,18 @@ module mainMem_tb();
 
 	initial begin
 
-		// Testing single read at first address
-		@(posedge clock);
+		//TESTING SINGLE WRITE
 
-		wren = 1'b1;
-		addr = 32'h80020000;
-		data_in = 32'h55cc_55cc;
-		acc_size = 2'b00;
+		@(posedge clock)
+
+		ReadFile();
+		addr <= addr + 4;
+		data_in <= captured_data;
+
+  		wren = 1'b1;
+  		acc_size = 2'b00;
+
+		// TESTING SINGLE READ
 
 		@(posedge clock);
 
@@ -64,99 +99,158 @@ module mainMem_tb();
 
 		@(posedge clock);
 
-		if (data_out == 32'h55cc_55cc) begin
-			$display("Retrieved at starting address: %h - PASS", addr);
+		if (data_out == captured_data) begin
+			$display("Retrieved value: %h at address: %h - PASS", captured_data, addr);
 			output_val <= data_out;
 		end else begin
-			$display ("Expected value is 55cc55cc, actual value is %h", data_out);
+			$display ("Expected value is %h, actual value is %h", captured_data, data_out);
 		end
 
-		enable = 0;
-
-
-
-		// Test Burst Read for 4 words
+		// TESTING BURST WRITE 4 WORDS
 		@(posedge clock);
 
-		enable = 1;
-		wren = 1'b1;
-		addr = 32'h80020004;
+		ReadFile();
+		addr <= addr + 4;
+		data_in <= captured_data;
+  		captured_data_blk[0] <= captured_data;
+
+  		wren = 1'b1;
 		acc_size = 2'b01;
-		data_in = 32'h55cc_55cd;
+
+		for (loop_count = 1; loop_count <= 3; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			ReadFile();
+			data_in <= captured_data;
+			captured_data_blk[loop_count] <= captured_data;
+		end
+
+
+		// TESTING BURST READ 4 WORDS
 
 		@(posedge clock);
 
-		data_in = 32'h55cc_55ce;
-
-		@(posedge clock);
-
-		data_in = 32'h55cc_55cf;
-
-		@(posedge clock);
-
-		data_in = 32'h55cc_55c1;
-
-		@(posedge clock);
-
-		addr = 32'h80020000;		
 		wren = 1'b0;
 
 		@(posedge clock);
 
-		//waste mon
+		for (loop_count = 0; loop_count < 4; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			if (data_out == captured_data_blk[loop_count]) begin
+				$display("Retrieved value: %h at starting address: %h - PASS", captured_data_blk[loop_count], addr);
+			end else begin
+				$display ("Expected value is %h, actual value is %h", captured_data_blk[loop_count], data_out);
+			end
+		end
+
+
+		// TESTING BURST WRITE 8 WORDS
 
 		@(posedge clock);
 
-		if (data_out == 32'h55cc_55cc) begin
-			$display("Retrieved 1st value at starting address: %h - PASS", addr);
-			output_val <= data_out;
-		end else begin
-			$display ("Expected value is 55cc55cc, actual value is %h", data_out);
+		ReadFile();
+		addr <= addr + 16;
+		data_in <= captured_data;
+  		captured_data_blk[0] <= captured_data;
+
+  		wren = 1'b1;
+		acc_size = 2'b10;
+
+		for (loop_count = 1; loop_count < 8; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			ReadFile();
+			data_in <= captured_data;
+			captured_data_blk[loop_count] <= captured_data;
 		end
+
+		// TESTING BURST READ 8 WORDS
 
 		@(posedge clock);
 
-		if (data_out == 32'h55cc_55cd) begin
-			$display("Retrieved 2nd value at starting address: %h - PASS", addr);
-			output_val <= data_out;
-		end else begin
-			$display ("Expected value is 55cc55cd, actual value is %h", data_out);
-		end
+		wren = 1'b0;
 
 		@(posedge clock);
 
-		if (data_out == 32'h55cc_55ce) begin
-			$display("Retrieved 3rd value at starting address: %h - PASS", addr);
-			output_val <= data_out;
-		end else begin
-			$display ("Expected value is 55cc55ce, actual value is %h", data_out);
+		for (loop_count = 0; loop_count < 8; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			if (data_out == captured_data_blk[loop_count]) begin
+				$display("Retrieved value: %h at starting address: %h - PASS", captured_data_blk[loop_count], addr);
+			end else begin
+				$display ("Expected value is %h, actual value is %h", captured_data_blk[loop_count], data_out);
+			end
 		end
+
+		// TESTING BURST WRITE 16 WORDS
 
 		@(posedge clock);
 
-		if (data_out == 32'h55cc_55cf) begin
-			$display("Retrieved 4th value at starting address: %h - PASS", addr);
-			output_val <= data_out;
-		end else begin
-			$display ("Expected value is 55cc55cf, actual value is %h", data_out);
+		ReadFile();
+		addr <= addr + 32;
+		data_in <= captured_data;
+  		captured_data_blk[0] <= captured_data;
+
+  		wren = 1'b1;
+		acc_size = 2'b11;
+
+		for (loop_count = 1; loop_count < 16; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			ReadFile();
+			data_in <= captured_data;
+			captured_data_blk[loop_count] <= captured_data;
 		end
 
-		enable = 0;
+		// TESTING BURST READ 16 WORDS
+
+		@(posedge clock);
+
+		wren = 1'b0;
+
+		@(posedge clock);
+
+		for (loop_count = 0; loop_count < 16; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			if (data_out == captured_data_blk[loop_count]) begin
+				$display("Retrieved value: %h at starting address: %h - PASS", captured_data_blk[loop_count], addr);
+			end else begin
+				$display ("Expected value is %h, actual value is %h", captured_data_blk[loop_count], data_out);
+			end
+		end
+
+
+		//WRITE THE REST OF FILE
+
+		@(posedge clock);
+
+		wren = 1'b1;
+		acc_size = 2'b00;
+		addr <= addr + 60;
+
+		@(posedge clock);
+
+
+		counter <= 0;
+		while (!eof_flag) begin
+			@(posedge clock);
+			counter <= counter + 1;
+			ReadFile();
+			data_in <= captured_data;
+			addr <= addr + 4;
+			captured_data_blk[loop_count] <= captured_data;
+		end
+
+		// READ THE REST OF THE FILE
+
+		wren = 1'b0;
+		addr <= addr - (counter << 2);
+
+		@(posedge clock);
+
+		for (loop_count = 0; loop_count < counter; loop_count = loop_count + 1) begin
+			@(posedge clock);
+			addr <= addr + 4;
+		end
+
+
 	end
-
-	/* Loading data from .x file, this should be incorporated into testing once we're sure our memory works for hardcoded values
-
-	always @(posedge clock) begin
- 
-  		if (!$feof(data_file)) begin
-  			scan_file = $fscanf(data_file, "%h\n", captured_data);
-  			addr <= addr + 4;
-  			data_in <= captured_data;
-    		//use captured_data as you would any other wire or reg value;
-  		end
-	end
-
-	*/
 
 
 	// This just helps see our changing data
