@@ -63,7 +63,7 @@ module mainMem_tb();
 
 	// Opens file for read, we should prolly close this somewhere
 	initial begin
-		filename = "bench-v2/fact.x";
+		filename = "bench-v2/SumArray.x";
   		OpenFile();
 	end
 
