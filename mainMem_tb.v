@@ -23,8 +23,6 @@ module mainMem_tb();
 
 	reg [0:31] captured_data;
 
-	reg[0:31] output_val;
-
 	reg [0:31] 		captured_data_blk [0:15];
 
 	`define NULL 0
@@ -61,7 +59,6 @@ module mainMem_tb();
 		enable = 1;
 		wren = 1;
 		acc_size = 2'b00;
-		output_val = 32'h0000_0000;
 	end
 
 	// Opens file for read, we should prolly close this somewhere
@@ -101,7 +98,6 @@ module mainMem_tb();
 
 		if (data_out == captured_data) begin
 			$display("Retrieved value: %h at address: %h - PASS", captured_data, addr);
-			output_val <= data_out;
 		end else begin
 			$display ("Expected value is %h, actual value is %h", captured_data, data_out);
 		end
@@ -222,30 +218,40 @@ module mainMem_tb();
 
 		wren = 1'b1;
 		acc_size = 2'b00;
+		counter <= 1;
+		
+		ReadFile();
+		data_in <= captured_data;
+		captured_data_blk[0] <= captured_data;
 		addr <= addr + 60;
-
-		@(posedge clock);
-
-
-		counter <= 0;
+		
 		while (!eof_flag) begin
 			@(posedge clock);
-			counter <= counter + 1;
 			ReadFile();
 			data_in <= captured_data;
 			addr <= addr + 4;
-			captured_data_blk[loop_count] <= captured_data;
+			captured_data_blk[counter] <= captured_data;
+			counter <= counter + 1;
 		end
-
+		
+		@(posedge clock);
+		
 		// READ THE REST OF THE FILE
 
+		counter <= counter - 1;
 		wren = 1'b0;
-		addr <= addr - (counter << 2);
-
-		@(posedge clock);
+		addr <= addr - ((counter-1) << 2);
 
 		for (loop_count = 0; loop_count < counter; loop_count = loop_count + 1) begin
 			@(posedge clock);
+			@(posedge clock); // because addr is reg, wont see it until one cycle later, and data comes cycle after that
+			
+			if (data_out == captured_data_blk[loop_count]) begin
+				$display("Retrieved value: %h at address: %h - PASS", captured_data_blk[loop_count], addr);
+			end else begin
+				$display ("Expected value is %h, actual value is %h", captured_data_blk[loop_count], data_out);
+			end
+			
 			addr <= addr + 4;
 		end
 
