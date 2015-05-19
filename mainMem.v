@@ -1,34 +1,38 @@
 module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	
+	// Parameters
 	parameter ACCESS_SIZE 	= 2;
 	parameter ADDRESS_SIZE 	= 32;
 	parameter DATA_SIZE 	= 32;
 	parameter MEM_SIZE 	= 1048578; // 1MB
 	parameter MEM_WIDTH 	= 8;
-
 	parameter START_ADDRESS = 32'h80020000;
 
+	// Inputs
 	input	 			clk, wren, enable;
 	input [0:ADDRESS_SIZE-1] 	addr;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
 
+	// Outputs
 	output reg[0:DATA_SIZE-1] 	d_out;
 	output reg			busy;
 
-	reg reset_counter;
-
+	// Registers for inputs
 	reg [0:ADDRESS_SIZE-1]		addr_reg;
 	reg [0:ACCESS_SIZE-1] 		acc_size_reg;
 	reg				wren_reg;
 	
+	// RAM
 	reg [0:MEM_WIDTH-1] 		mem_block [0:MEM_SIZE-1];
 
+	// Control counters
 	wire [0:3] 			num_words;
 	reg [0:5] 			counter;
-
+	reg 				reset_counter;
 	integer 			i;
 
+	// Control vals
 	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
 	wire[0:ADDRESS_SIZE-1] 		start_index;
 	wire 				valid_addr;
@@ -70,8 +74,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 				mem_block[mem_index+2] = d_in[16:23];
 				mem_block[mem_index+3] = d_in[24:31];
 			end else begin
-				d_out = 
-					{ mem_block[mem_index],
+				d_out = { mem_block[mem_index],
 					mem_block[mem_index+1],
 					mem_block[mem_index+2],
 					mem_block[mem_index+3] };
@@ -98,10 +101,5 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 		(acc_size == 2'b01)? 4'h3:
 		(acc_size == 2'b10)? 4'h7:
 					4'hf;
-
-
-	/* THINGS TO DO STILL:
-			- busy deasserts 1 cycle too early 
-	*/
 
 endmodule
