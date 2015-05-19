@@ -249,6 +249,11 @@ module mainMem_tb();
 			addr <= addr + 4;
 		end
 
+		// TURN OFF WHEN DONE
+		
+		@(posedge clock);
+
+		enable = 0;
 
 	end
 
