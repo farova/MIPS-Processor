@@ -13,3 +13,4 @@ add wave dut/num_words
 add wave dut/wren
 add wave dut/busy
 add wave busy
+run 10000

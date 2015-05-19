@@ -23,7 +23,7 @@ module mainMem_tb();
 
 	reg [0:31] captured_data;
 
-	reg [0:31] 		captured_data_blk [0:15];
+	reg [0:31] 		captured_data_blk [0:(1048578 - 1)];
 
 	`define NULL 0
 
@@ -63,7 +63,7 @@ module mainMem_tb();
 
 	// Opens file for read, we should prolly close this somewhere
 	initial begin
-		filename = "bench-v2/SumArray.x";
+		filename = "bench-v2/fact.x";
   		OpenFile();
 	end
 
@@ -263,6 +263,8 @@ module mainMem_tb();
 		@(posedge clock);
 
 		enable = 0;
+
+		$display("FINISHED THE SIMULATION");
 
 	end
 
