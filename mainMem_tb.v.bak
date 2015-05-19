@@ -240,26 +240,28 @@ module mainMem_tb();
 
 		counter <= counter - 1;
 		wren = 1'b0;
-		addr <= addr - ((counter-1) << 2);
+		addr <= addr - ((counter-1) << 2);			
+
+		@(posedge clock); // because addr is reg, wont see it until one cycle later, and data comes cycle after that
 
 		for (loop_count = 0; loop_count < counter; loop_count = loop_count + 1) begin
 			@(posedge clock);
-			@(posedge clock); // because addr is reg, wont see it until one cycle later, and data comes cycle after that
-			
+
+			addr <= addr + 4;
+
 			if (data_out == captured_data_blk[loop_count]) begin
 				$display("Retrieved value: %h at address: %h - PASS", captured_data_blk[loop_count], addr);
 			end else begin
 				$display ("Expected value is %h, actual value is %h", captured_data_blk[loop_count], data_out);
 			end
 			
-			addr <= addr + 4;
 		end
 
 		// TURN OFF WHEN DONE
 		
 		@(posedge clock);
 
-		//enable = 0;
+		enable = 0;
 
 	end
 
