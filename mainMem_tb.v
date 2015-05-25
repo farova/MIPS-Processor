@@ -67,6 +67,11 @@ module mainMem_tb();
   		OpenFile();
 	end
 
+	initial begin
+		$dumpfile("test.vcd");
+		$dumpvars;
+	end
+
 	// Simulate clock
 	always #10 clock = !clock;
 
@@ -92,7 +97,8 @@ module mainMem_tb();
 		acc_size = 2'b00;
 		
 		@(posedge clock);
-		// waste mon
+		
+		$display("waste clock cycle");
 
 		@(posedge clock);
 
@@ -265,6 +271,7 @@ module mainMem_tb();
 		enable = 0;
 
 		$display("FINISHED THE SIMULATION");
+		$finish;
 
 	end
 
@@ -272,7 +279,7 @@ module mainMem_tb();
 	// This just helps see our changing data
 	always @(addr, data_in, data_out) begin
 		// Display output, only when value changes
-        	$display("%h,\t%h,\t%h", addr, data_in, data_out);
+        	$display("%h,\t%h,\t%h\t%h", addr, data_in, data_out, wren);
     end
 
 	
