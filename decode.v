@@ -11,16 +11,22 @@ wire[0:4] rs;
 wire[0:4] rd;
 wire[0:4] rt;
 wire[0:4] sa;
+wire[0:15] imm;
 wire[0:5] calc_type;
 wire[0:15] offset;
+wire[0:4] base;
+wire[0:26] insn_index;
 
 assign opcode = insn[0:5];
+assign base = insn[6:10];
 assign rs = insn[6:10];
 assign rt = insn[11:15];
 assign rd = insn[16:20];
 assign sa = insn[21:25];
-
+assign imm = insn[16:31];
+assign offset = insn[16:31];
 assign calc_type = insn[26:31];
+assign insn_index = insn[6:31];
 
 
 always @(posedge clk) begin
@@ -29,7 +35,13 @@ always @(posedge clk) begin
 		6'b000000: begin
 			case(calc_type)
 				6'b100000: begin //ADD
-					$display("ADD Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+
+					if (rt == 6'b000000) begin
+						$display("MOVE Rs: %d Rd: %d", rs, rd);	
+					end else begin
+						$display("ADD Rs: %d Rt: %d Rd: %d", rs, rt, rd);	
+					end
+					
 				end
 				6'b100001: begin //ADDU
 					$display("ADDU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
@@ -94,11 +106,111 @@ always @(posedge clk) begin
 				6'b100111: begin //NOR
 					$display("NOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 				end
+				6'b001001: begin
+					$display("JALR Rs: %d Rd: %d", rs, rd);
+				end
+				6'b001000: begin
+					$display("JR Rs: %d", rs);
+				end
 				default: begin
 					$display("unimplemented calculation type instruction");
 				end
 			endcase
 		end
+
+		6'b001001: begin //ADDIU
+			$display("ADDIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+		end
+
+		6'b001010: begin //SLTI
+			$display("SLTI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+		end
+
+		6'b001011: begin //SLTIU
+			$display("SLTIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+		end
+
+		6'b001101: begin //ORI
+			$display("ORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+		end
+
+		6'b001110: begin //ORI
+			$display("XORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+		end
+
+		6'b100011: begin //LW
+			$display("LW base: %d Rt: %d offset: %d", base, rt, offset);
+		end
+
+		6'b101011: begin //SW
+			$display("SW base: %d Rt: %d offset: %d", base, rt, offset);
+		end
+
+		6'b001111: begin //LUI
+			$display("LUI Rt: %d Imm: %d", rt, imm);
+		end
+
+		6'b100000: begin //LB
+			$display("LB base: %d Rt: %d offset: %d", base, rt, offset);
+		end
+
+		6'b101000: begin //SB
+			$display("SB base: %d Rt: %d offset: %d", base, rt, offset);
+		end
+
+		6'b100100: begin //LBU
+			$display("LBU base: %d Rt: %d offset: %d", base, rt, offset);
+		end
+
+		6'b000010: begin //J
+			$display("J target: %d", insn_index);
+		end		
+
+		6'b000011: begin //JAL
+			$display("JAL target: %d", insn_index);
+		end
+
+		6'b000100: begin //BEQ and BEQZ
+
+			if (rt == 6'b000000) begin
+				$display("BEQZ Rs: %d offset: %d", rs, offset);	
+			end else begin
+				$display("BEQ Rs: %d Rt: %d offset: %d", rs, rt, offset);	
+			end
+			
+		end
+
+		6'b000101: begin //BNE and BNEZ
+
+			if (rt == 6'b000000) begin
+				$display("BNEZ Rs: %d offset: %d", rs, offset);	
+			end else begin
+				$display("BNE Rs: %d Rt: %d offset: %d", rs, rt, offset);	
+			end
+			
+		end
+
+		6'b000001: begin //BGEZ and BLTZ
+
+			if (rt == 6'b000000) begin
+				$display("BLTZ Rs: %d offset: %d", rs, offset);
+			end else if (rt == 6'b000001) begin
+				$display("BGEZ Rs: %d offset: %d", rs, offset);
+			end else begin
+				$display("REGGIM not implemented");
+			end
+			
+		end
+
+		6'b000111: begin //BGTZ
+			$display("BGTZ Rs: %d offset: %d", rs, offset);
+		end
+
+		6'b000110: begin //BLEZ
+			$display("BLEZ Rs: %d offset: %d", rs, offset);
+		end
+
+
 
 		default: begin
 			$display("Noop");
