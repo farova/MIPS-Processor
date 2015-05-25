@@ -37,14 +37,27 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	wire[0:ADDRESS_SIZE-1] 		start_index;
 	wire 				valid_addr;
 
+	task dump; 
+   		integer i; 
+   		integer filenum; 
+		begin 
+   			$display("Writing external memory contents to mem_block.txt"); 
+   			filenum = $fopen("mem_block.txt"); 
+   			for (i = 0; i < MEM_SIZE-1; i = i + 1) begin 
+      			if (mem_block[i] !== 16'hxxxx) 
+         			$fdisplay(filenum,"%h : %h", i, mem_block[i]); 
+   			end 
+		end 
+	endtask 
+
 	// Initilization
 	initial begin
 		// Initialize memory to 0
 		for (i = 0; i < MEM_SIZE; i = i + 1) begin
-			mem_block[i] = 0;
+			mem_block[i] <= 0;
 		end
 		
-		counter = 0;
+		counter <= 0;
 
 	end
 
@@ -62,19 +75,19 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 
 		if (counter < num_words) begin
 			counter <= counter + 1;
-			busy = 1;
+			busy <= 1;
 		end else begin
-			busy = 0;
+			busy <= 0;
 		end
 
 		if ((enable || busy) && valid_addr) begin
 			if(wren) begin
-				mem_block[mem_index] = d_in[0:7];
-				mem_block[mem_index+1] = d_in[8:15];
-				mem_block[mem_index+2] = d_in[16:23];
-				mem_block[mem_index+3] = d_in[24:31];
+				mem_block[mem_index] <= d_in[0:7];
+				mem_block[mem_index+1] <= d_in[8:15];
+				mem_block[mem_index+2] <= d_in[16:23];
+				mem_block[mem_index+3] <= d_in[24:31];
 			end else begin
-				d_out = { mem_block[mem_index],
+				d_out <= { mem_block[mem_index],
 					mem_block[mem_index+1],
 					mem_block[mem_index+2],
 					mem_block[mem_index+3] };
