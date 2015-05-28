@@ -86,15 +86,15 @@ module mainMem_tb();
 		addr <= addr + 4;
 		data_in <= captured_data;
 
-  		wren = 1'b1;
-  		acc_size = 2'b00;
+  		wren <= 1'b1;
+  		acc_size <= 2'b00;
 
 		// TESTING SINGLE READ
 
 		@(posedge clock);
 
-		wren = 1'b0;
-		acc_size = 2'b00;
+		wren <= 1'b0;
+		acc_size <= 2'b00;
 		
 		@(posedge clock);
 		
@@ -116,8 +116,8 @@ module mainMem_tb();
 		data_in <= captured_data;
   		captured_data_blk[0] <= captured_data;
 
-  		wren = 1'b1;
-		acc_size = 2'b01;
+  		wren <= 1'b1;
+		acc_size <= 2'b01;
 
 		for (loop_count = 1; loop_count <= 3; loop_count = loop_count + 1) begin
 			@(posedge clock);
@@ -131,7 +131,7 @@ module mainMem_tb();
 
 		@(posedge clock);
 
-		wren = 1'b0;
+		wren <= 1'b0;
 
 		@(posedge clock);
 
@@ -154,8 +154,8 @@ module mainMem_tb();
 		data_in <= captured_data;
   		captured_data_blk[0] <= captured_data;
 
-  		wren = 1'b1;
-		acc_size = 2'b10;
+  		wren <= 1'b1;
+		acc_size <= 2'b10;
 
 		for (loop_count = 1; loop_count < 8; loop_count = loop_count + 1) begin
 			@(posedge clock);
@@ -168,7 +168,7 @@ module mainMem_tb();
 
 		@(posedge clock);
 
-		wren = 1'b0;
+		wren <= 1'b0;
 
 		@(posedge clock);
 
@@ -190,8 +190,8 @@ module mainMem_tb();
 		data_in <= captured_data;
   		captured_data_blk[0] <= captured_data;
 
-  		wren = 1'b1;
-		acc_size = 2'b11;
+  		wren <= 1'b1;
+		acc_size <= 2'b11;
 
 		for (loop_count = 1; loop_count < 16; loop_count = loop_count + 1) begin
 			@(posedge clock);
@@ -204,7 +204,7 @@ module mainMem_tb();
 
 		@(posedge clock);
 
-		wren = 1'b0;
+		wren <= 1'b0;
 
 		@(posedge clock);
 
@@ -222,8 +222,8 @@ module mainMem_tb();
 
 		@(posedge clock);
 
-		wren = 1'b1;
-		acc_size = 2'b00;
+		wren <= 1'b1;
+		acc_size <= 2'b00;
 		counter <= 1;
 		
 		ReadFile();
@@ -245,7 +245,7 @@ module mainMem_tb();
 		// READ THE REST OF THE FILE
 
 		counter <= counter - 1;
-		wren = 1'b0;
+		wren <= 1'b0;
 		addr <= addr - ((counter-1) << 2);			
 
 		@(posedge clock); // because addr is reg, wont see it until one cycle later, and data comes cycle after that
@@ -267,6 +267,8 @@ module mainMem_tb();
 		// TURN OFF WHEN DONE
 		
 		@(posedge clock);
+
+		dut.dump();
 
 		enable = 0;
 
