@@ -271,7 +271,7 @@ module mainMem_tb();
 		enable = 0;
 
 		$display("FINISHED THE SIMULATION");
-		$finish;
+		//$finish;
 
 	end
 
