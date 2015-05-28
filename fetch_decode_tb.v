@@ -30,6 +30,10 @@ reg [0:31] captured_data;
 
 `define NULL 0
 
+
+
+// Call this to open the file
+
 task OpenFile;
 		begin
 			data_file = $fopen(filename, "r");
@@ -39,6 +43,8 @@ task OpenFile;
  	 		end
 		end
 	endtask
+
+// Call this to read a line of the file
 
 	task ReadFile;
 		begin
@@ -52,6 +58,8 @@ task OpenFile;
 		end
 	endtask
 
+
+//Initialize modules being used in this testbench
 
 mainMem mem_module(clock, addr, data_in, data_out, acc_size, wren, busy, enable);
 
@@ -70,9 +78,9 @@ decode decode_module(clock, data_out, pc_in, valid_insn);
 		valid_insn <= 0;
 	end
 
-	// Opens file for read, we should prolly close this somewhere
+	// Opens file for read
 	initial begin
-		filename = "bench-v2/SumArray.x";
+		filename = "bench-v2/BubbleSort.x";
   		OpenFile();
 	end
 
@@ -87,7 +95,7 @@ decode decode_module(clock, data_out, pc_in, valid_insn);
 
 	initial begin
 
-		//Write to Memory
+		//Write data to memory
 		@(posedge clock);
 
 		wren <= 1'b1;
@@ -106,23 +114,36 @@ decode decode_module(clock, data_out, pc_in, valid_insn);
 			counter <= counter + 1;
 		end
 
+		//mem_module.dump();  for debugging purposes
+
+		//Fetch data and decode it
+
 		wren <= 0;
 		stall <= 0;
-		addr <= pc_out;
-		pc_in <= pc_out;
 		acc_size <= acc_size_out;
 		loop_count <= 1;
+
+		// These two clock cycles are needed initially because address will be available after one clock cycle
+		// and data_out will be available the clock cycle after that -> hence two clock cycles
+		@(posedge clock);
+
+		addr <= pc_out;
+		pc_in <= pc;
+		pc <= pc_out;
+
 		@(posedge clock);
 		
-		valid_insn <= 1;
-		pc <= pc_in;
-		pc_in <= pc_out;
+		pc_in <= pc;
+		pc <= pc_out;
 		addr <= pc_out;
 
 		while (loop_count < counter) begin
 			@(posedge clock);
-			pc <= pc_in;
-			pc_in <= pc_out;
+			if (loop_count == 1) begin
+				valid_insn <= 1;
+			end
+			pc_in <= pc;
+			pc <= pc_out;
 			addr <= pc_out;
 			loop_count <= loop_count + 1;
 		end

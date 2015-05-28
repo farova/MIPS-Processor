@@ -19,6 +19,7 @@ wire[0:15] offset;
 wire[0:4] base;
 wire[0:26] insn_index;
 
+
 assign opcode = insn[0:5];
 assign base = insn[6:10];
 assign rs = insn[6:10];
@@ -30,12 +31,17 @@ assign offset = insn[16:31];
 assign calc_type = insn[26:31];
 assign insn_index = insn[6:31];
 
+//Basic noop check
+
 assign isNoop = insn == 32'h00000000 ? 1 : 0;
 
 
 
 
 always @(posedge clk) begin
+
+	// Need this check because otherwise random instructions can sometimes be passed
+
 	if (valid_insn) begin
 
 		$display("PC: %h Instruction: %h", pc, insn);
@@ -45,173 +51,173 @@ always @(posedge clk) begin
 				6'b000000: begin
 					case(calc_type)
 						6'b100000: begin //ADD
-							$display("ADD Rs: %d Rt: %d Rd: %d", rs, rt, rd);	
+							$display("ADD Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);	
 						end
 						6'b100001: begin //ADDU
-							$display("ADDU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("ADDU Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b100010: begin //SUB
-							$display("SUB Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SUB Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b100011: begin //SUBU
-							$display("SUBU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SUBU Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b011000: begin //MULT
-							$display("MULT Rs: %d Rt: %d", rs, rt);
+							$display("MULT Rs: %d Rt: %d\n", rs, rt);
 						end
 						6'b011001: begin //MULTU
-							 $display("MULTU Rs: %d Rt: %d", rs, rt);
+							 $display("MULTU Rs: %d Rt: %d\n", rs, rt);
 						end
 						6'b011010: begin //DIV
-							$display("DIV Rs: %d Rt: %d", rs, rt);
+							$display("DIV Rs: %d Rt: %d\n", rs, rt);
 						end
 						6'b011011: begin //DIVU
-							$display("DIVU Rs: %d Rt: %d", rs, rt);
+							$display("DIVU Rs: %d Rt: %d\n", rs, rt);
 						end
 						6'b010000: begin //MFHI
-							$display("MFHI Rd: %d", rd);
+							$display("MFHI Rd: %d\n", rd);
 						end
 						6'b010010: begin //MFLO
-							$display("MFLO Rd: %d", rd);
+							$display("MFLO Rd: %d\n", rd);
 						end
 						6'b101010: begin //SLT
-							$display("SLT Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SLT Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b101011: begin //SLTU
-							$display("SLTU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SLTU Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b000000: begin //SLL
-							$display("SLL Sa: %d Rt: %d Rd: %d", sa, rt, rd);
+							$display("SLL Sa: %d Rt: %d Rd: %d\n", sa, rt, rd);
 						end
 						6'b000010: begin //SLLV
-							$display("SLLV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SLLV Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b000010: begin //SRL
-							$display("SRL Sa: %d Rt: %d Rd: %d", sa, rt, rd);
+							$display("SRL Sa: %d Rt: %d Rd: %d\n", sa, rt, rd);
 						end
 						6'b000110: begin //SRLV
-							$display("SRLV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SRLV Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b000011: begin //SRA
-							$display("SRA Sa: %d Rt: %d Rd: %d", sa, rt, rd);
+							$display("SRA Sa: %d Rt: %d Rd: %d\n", sa, rt, rd);
 						end
 						6'b000111: begin //SRAV
-							$display("SRAV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("SRAV Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b100100: begin //AND
-							$display("AND Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("AND Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b100101: begin //OR
-							$display("OR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("OR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b100110: begin //XOR
-							$display("XOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("XOR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b100111: begin //NOR
-							$display("NOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							$display("NOR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
 						6'b001001: begin
-							$display("JALR Rs: %d Rd: %d", rs, rd);
+							$display("JALR Rs: %d Rd: %d\n", rs, rd);
 						end
 						6'b001000: begin
-							$display("JR Rs: %d", rs);
+							$display("JR Rs: %d\n", rs);
 						end
 						default: begin
-							$display("unimplemented calculation type instruction");
+							$display("unimplemented calculation type instruction\n");
 						end
 					endcase
 
 				end
 
 				6'b001001: begin //ADDIU
-					$display("ADDIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					$display("ADDIU Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
 				end
 
 				6'b001010: begin //SLTI
-					$display("SLTI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					$display("SLTI Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
 				end
 
 				6'b001011: begin //SLTIU
-					$display("SLTIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					$display("SLTIU Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
 				end
 
 				6'b001101: begin //ORI
-					$display("ORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					$display("ORI Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
 				end
 
 				6'b001110: begin //ORI
-					$display("XORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					$display("XORI Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
 				end
 
 				6'b100011: begin //LW
-					$display("LW base: %d Rt: %d offset: %d", base, rt, offset);
+					$display("LW base: %d Rt: %d offset: %d\n", base, rt, offset);
 				end
 
 				6'b101011: begin //SW
-					$display("SW base: %d Rt: %d offset: %d", base, rt, offset);
+					$display("SW base: %d Rt: %d offset: %d\n", base, rt, offset);
 				end
 
 				6'b001111: begin //LUI
-					$display("LUI Rt: %d Imm: %d", rt, imm);
+					$display("LUI Rt: %d Imm: %d\n", rt, imm);
 				end
 
 				6'b100000: begin //LB
-					$display("LB base: %d Rt: %d offset: %d", base, rt, offset);
+					$display("LB base: %d Rt: %d offset: %d\n", base, rt, offset);
 				end
 
 				6'b101000: begin //SB
-					$display("SB base: %d Rt: %d offset: %d", base, rt, offset);
+					$display("SB base: %d Rt: %d offset: %d\n", base, rt, offset);
 				end
 
 				6'b100100: begin //LBU
-					$display("LBU base: %d Rt: %d offset: %d", base, rt, offset);
+					$display("LBU base: %d Rt: %d offset: %d\n", base, rt, offset);
 				end
 
 				6'b000010: begin //J
-					$display("J target: %d", insn_index);
+					$display("J target: %d\n", insn_index);
 				end		
 
 				6'b000011: begin //JAL
-					$display("JAL target: %d", insn_index);
+					$display("JAL target: %d\n", insn_index);
 				end
 
 				6'b000100: begin //BEQ and BEQZ
-					$display("BEQ Rs: %d Rt: %d offset: %d", rs, rt, offset);	
+					$display("BEQ Rs: %d Rt: %d offset: %d\n", rs, rt, offset);	
 					
 				end
 
 				6'b000101: begin //BNE and BNEZ
-					$display("BNE Rs: %d Rt: %d offset: %d", rs, rt, offset);	
+					$display("BNE Rs: %d Rt: %d offset: %d\n", rs, rt, offset);	
 					
 				end
 
 				6'b000001: begin //BGEZ and BLTZ
 
 					if (rt == 6'b000000) begin
-						$display("BLTZ Rs: %d offset: %d", rs, offset);
+						$display("BLTZ Rs: %d offset: %d\n", rs, offset);
 					end else if (rt == 6'b000001) begin
-						$display("BGEZ Rs: %d offset: %d", rs, offset);
+						$display("BGEZ Rs: %d offset: %d\n", rs, offset);
 					end else begin
-						$display("REGGIM not implemented");
+						$display("REGGIM not implemented\n");
 					end
 					
 				end
 
 				6'b000111: begin //BGTZ
-					$display("BGTZ Rs: %d offset: %d", rs, offset);
+					$display("BGTZ Rs: %d offset: %d\n", rs, offset);
 				end
 
 				6'b000110: begin //BLEZ
-					$display("BLEZ Rs: %d offset: %d", rs, offset);
+					$display("BLEZ Rs: %d offset: %d\n", rs, offset);
 				end
 
 				default: begin
-					$display("unimplemented instruction");
+					$display("unimplemented instruction\n");
 				end
 
 			endcase
 		end else begin
-			$display("noop");
+			$display("noop\n");
 		end
 
 	end

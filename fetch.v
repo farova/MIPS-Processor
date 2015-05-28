@@ -10,12 +10,13 @@ reg[0:1]acc_size;
 
 
 initial begin
-	pc_out <= 32'h80020000;
-	acc_size <= 0;
+	pc_out <= 32'h80020000 - 4;
 end
 
-assign acc_size_out = 2'b00;
+assign acc_size_out = 2'b00; //access size doesnt change for fetch
 
+
+// if stall is high, we shouldn't increment PC
 
 always @(posedge clk) begin
 	if (!stall) begin

@@ -1,29 +1,8 @@
-{C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/decode.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/decode.v}
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module Decode
-
-Top level modules:
-	Decode
-
-} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v}
+{C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module mainMem
 
 Top level modules:
 	mainMem
-
-} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem_tb.v}
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module mainMem_tb
-
-Top level modules:
-	mainMem_tb
-
-} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/fetch.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/fetch.v}
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module Fetch
-
-Top level modules:
-	Fetch
 
 } {} {}}
