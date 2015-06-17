@@ -211,6 +211,10 @@ always @(posedge clk) begin
 					$display("BLEZ Rs: %d offset: %d\n", rs, offset);
 				end
 
+				6'b011100: begin //MUL
+					$display("MUL Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+				end
+
 				default: begin
 					$display("unimplemented instruction\n");
 				end
