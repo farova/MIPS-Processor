@@ -1,9 +1,9 @@
 module RegisterFile(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData);
 
 input wire clock;
-input wire[4:0] rsIn;
-input wire[4:0] rtIn;
-input wire[4:0] rdIn;
+input wire[0:4] rsIn;
+input wire[0:4] rtIn;
+input wire[0:4] rdIn;
 
 input wire[0:31] writeBackData;
 
@@ -20,10 +20,14 @@ initial begin
 	end
 end
 
+// Read on rising edge
 always @(posedge clock) begin
 	rsOut <= registers[rsIn];
 	rtOut <= registers[rtIn];
+end
 
+// Write on falling edge
+always @(negedge clock) begin
 	registers[rdIn] <= writeBackData;
 end
 
