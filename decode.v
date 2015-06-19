@@ -40,6 +40,7 @@ assign insn_index = insn[6:31];
 
 integer i;
 
+
 //Basic noop check
 
 assign isNoop = insn == 32'h00000000 ? 1 : 0;

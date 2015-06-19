@@ -1,4 +1,4 @@
-`include "control.vh";
+`include "control.vh"
 
 module Execute_tb();
 
@@ -15,16 +15,25 @@ reg[0:31] pc_in;
 wire[0:31] insn;
 reg[0:31] insn_in;
 reg[0:31] pc;
-reg[0:`CNTRL_REG_SIZE-1] control;
+wire[0:`CNTRL_REG_SIZE-1] control;
+
+wire[0:`CNTRL_REG_SIZE-1] control_in;
 
 
-wire[0:4] rsIn;
-wire[0:4] rtIn;
-wire[0:4] rdIn;
+wire[0:31] rsIn_exec;
+wire[0:31] rtIn_exec;
+
+wire[0:4] rsIn_reg;
+wire[0:4] rtIn_reg;
+wire[0:4] rdIn_reg;
+
+wire[0:4] rsOut_dec;
+wire[0:4] rtOut_dec;
+wire[0:4] rdOut_dec;
 reg[0:31] writeBackData;
 
-wire[0:31] rsOut;
-wire[0:31] rtOut;
+wire[0:31] rsOut_reg;
+wire[0:31] rtOut_reg;
 wire[0:31] data_out;
 
 parameter START_ADDRESS = 32'h80020000;
@@ -53,12 +62,22 @@ mainMem 		mem_module(clock, addr, data_in, insn, acc_size, wren, busy, enable);
 fetch 			fetch_module(clock, stall, pc_out, rw, acc_size_out);
 
 // DECODE
-decode 			decode_module(clock, insn, pc_in, valid_insn, rsIn, rtIn, rdIn, control);
-RegisterFile 	register_module(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData, control);
+decode 			decode_module(clock, insn, pc_in, valid_insn, rsOut_dec, rtOut_dec, rdOut_dec, control);
+RegisterFile 	register_module(clock, rsIn_reg, rtIn_reg, rdIn_reg, rsOut_reg, rtOut_reg, writeBackData, control_in);
 
 // EXECUTE
-Execute 		execute_module(clock, pc, rsOut, rtOut, insn, control, data_out);
+Execute 		execute_module(clock, pc, rsIn_exec, rtIn_exec, insn, control_in, data_out);
 
+
+
+assign rsIn_reg = rsOut_dec;
+assign rtIn_reg = rtOut_dec;
+assign rdIn_reg = rdOut_dec;
+
+assign rsIn_exec = rsOut_reg;
+assign rtIn_exec = rtOut_reg;
+
+assign control_in = control;
 
 
 
@@ -98,10 +117,7 @@ Execute 		execute_module(clock, pc, rsOut, rtOut, insn, control, data_out);
 		wren <= 1;
 		acc_size <= 2'b00;
 		stall <= 1;
-		valid_insn <= 0;
-
-		control[`RWE] = 1;
-		control[`RDST] = 1;	
+		valid_insn <= 0;	
 		
 	end
 

@@ -10,8 +10,8 @@ input wire[0:`CNTRL_REG_SIZE-1] control;
 
 input wire[0:31] writeBackData;
 
-output reg[0:31] rsOut;
-output reg[0:31] rtOut;
+output wire[0:31] rsOut;
+output wire[0:31] rtOut;
 
 reg[0:31] registers[0:31];
 
@@ -24,13 +24,13 @@ initial begin
 end
 
 // Read on rising edge
-always @(posedge clock) begin
-	rsOut <= registers[rsIn];
-	rtOut <= registers[rtIn];
-end
+
+assign rsOut = registers[rsIn];
+assign rtOut = registers[rtIn];
+
 
 // Write on falling edge
-always @(negedge clock) begin
+always @(posedge clock) begin
 	if (control[`RWE]) begin
 		if (control[`RDST]) begin
 			registers[rdIn] <= writeBackData;
