@@ -19,7 +19,7 @@ integer i;
 
 initial begin
 	for (i = 0; i < 32; i = i + 1) begin
-		registers[i] = 32'h00000000;
+		registers[i] = i;
 	end
 end
 

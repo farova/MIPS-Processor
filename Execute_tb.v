@@ -13,6 +13,7 @@ reg[0:31] tempaddr;
 reg[0:31] pc_in;
 
 reg[0:31] insn;
+reg[0:31] insn_in;
 reg[0:31] pc;
 reg[0:`CNTRL_REG_SIZE] control;
 
@@ -52,7 +53,7 @@ mainMem 		mem_module(clock, addr, data_in, insn, acc_size, wren, busy, enable);
 fetch 			fetch_module(clock, stall, pc_out, rw, acc_size_out);
 
 // DECODE
-decode 			decode_module(clock, insn, pc, valid_insn);
+decode 			decode_module(clock, insn, pc_in, valid_insn, rsIn, rtIn, rdIn, control);
 RegisterFile 	register_module(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData, control);
 
 // EXECUTE

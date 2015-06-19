@@ -186,6 +186,8 @@ always @(posedge clock) begin
 		endcase
 	end
 
+	$display("ALU_OUTPUT: %d", data_out);
+
 end
 
 
