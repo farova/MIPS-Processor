@@ -8,4 +8,3 @@ add wave valid_insn
 add wave pc_out
 add wave pc
 add wave pc_in
-run 10000

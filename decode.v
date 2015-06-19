@@ -1,4 +1,4 @@
-module decode(clk, insn, pc, valid_insn);
+ module decode(clk, insn, pc, valid_insn);
 
 
 input clk, valid_insn;
@@ -41,6 +41,10 @@ assign isNoop = insn == 32'h00000000 ? 1 : 0;
 always @(posedge clk) begin
 
 	// Need this check because otherwise random instructions can sometimes be passed
+	
+	if (insn == 32'h70621002) begin
+		$display("stupid mul");
+	end
 
 	if (valid_insn) begin
 
