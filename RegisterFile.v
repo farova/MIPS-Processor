@@ -1,6 +1,6 @@
 `include "control.vh"
 
-module RegisterFile(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData);
+module RegisterFile(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData, control);
 
 input wire clock;
 input wire[0:4] rsIn;

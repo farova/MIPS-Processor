@@ -53,7 +53,7 @@ fetch 			fetch_module(clock, stall, pc_out, rw, acc_size_out);
 
 // DECODE
 decode 			decode_module(clock, insn, pc, valid_insn);
-RegisterFile 	register_module(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData);
+RegisterFile 	register_module(clock, rsIn, rtIn, rdIn, rsOut, rtOut, writeBackData, control);
 
 // EXECUTE
 Execute 		execute_module(clock, pc, rsOut, rtOut, insn, control, data_out);
@@ -98,6 +98,10 @@ Execute 		execute_module(clock, pc, rsOut, rtOut, insn, control, data_out);
 		acc_size <= 2'b00;
 		stall <= 1;
 		valid_insn <= 0;
+
+		control[`RWE] = 1;
+		control[`RDST] = 1;	
+		
 	end
 
 // Opens file for read

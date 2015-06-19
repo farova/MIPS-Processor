@@ -12,13 +12,6 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	mainMem
 
-} {} {}} C:/Development/MIPS-Processor/fetch_decode_tb.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/fetch_decode_tb.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module fetch_decode_tb
-
-Top level modules:
-	fetch_decode_tb
-
 } {} {}} D:/DEVELOPMENT/MIPS-Processor/fetch_decode_tb.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/fetch_decode_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module fetch_decode_tb
@@ -26,60 +19,38 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	fetch_decode_tb
 
-} {} {}} C:/Development/MIPS-Processor/decode.v {0 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\decode.v}
+} {} {}} C:/Development/MIPS-Processor/decode.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\decode.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module decode
-** Error: C:\Development\MIPS-Processor\decode.v(10): (vlog-2730) Undefined variable: 'CNTRL_REG_SIZE'.
 
-** Error: C:\Development\MIPS-Processor\decode.v(47): (vlog-2730) Undefined variable: 'CNTROL_REG_SIZE'.
+Top level modules:
+	decode
 
-** Error: C:\Development\MIPS-Processor\decode.v(57): (vlog-2730) Undefined variable: 'BR'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(58): (vlog-2730) Undefined variable: 'JP'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(59): (vlog-2730) Undefined variable: 'ALUINB'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(60): (vlog-2730) Undefined variable: 'ALUOP'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(61): (vlog-2730) Undefined variable: 'DMWE'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(62): (vlog-2730) Undefined variable: 'RWE'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(63): (vlog-2730) Undefined variable: 'Rdst'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(64): (vlog-2730) Undefined variable: 'RWD'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(154): (vlog-2730) Undefined variable: 'JR'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(170): (vlog-2730) Undefined variable: 'RDST'.
-
-** Error: C:\Development\MIPS-Processor\decode.v(3): Identifier must be declared with a port mode: control.
-
-} {4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 17.0 18.0 19.0 20.0 21.0 22.0 23.0 24.0 25.0 26.0 27.0 28.0 29.0} {}} C:/Development/MIPS-Processor/mainMem.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/mainMem.v
+} {} {}} C:/Development/MIPS-Processor/mainMem.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/mainMem.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module mainMem
 
 Top level modules:
 	mainMem
 
-} {} {}} C:/Development/MIPS-Processor/RegisterFile.v {0 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/RegisterFile.v
+} {} {}} C:/Development/MIPS-Processor/RegisterFile.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/RegisterFile.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module RegisterFile
-** Error: C:/Development/MIPS-Processor/RegisterFile.v(9): (vlog-2730) Undefined variable: 'CNTRL_REG_SIZE'.
 
-** Error: C:/Development/MIPS-Processor/RegisterFile.v(34): (vlog-2730) Undefined variable: 'RWE'.
+Top level modules:
+	RegisterFile
 
-** Error: C:/Development/MIPS-Processor/RegisterFile.v(35): (vlog-2730) Undefined variable: 'RDST'.
-
-
-} {4.0 5.0 6.0 7.0 8.0 9.0} {}} D:/DEVELOPMENT/MIPS-Processor/mainMem.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/mainMem.v
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/mainMem.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/mainMem.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module mainMem
 
 Top level modules:
 	mainMem
 
-} {} {}} C:/Development/MIPS-Processor/RegisterFile_tb.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/RegisterFile_tb.v
+} {} {}} C:/Development/MIPS-Processor/control.vh {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\control.vh}
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+
+} {} {}} C:/Development/MIPS-Processor/RegisterFile_tb.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\RegisterFile_tb.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module RegisterFile_tb
 
@@ -107,27 +78,14 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	fetch
 
-} {} {}} C:/Development/MIPS-Processor/Execute.v {0 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/Execute.v
+} {} {}} C:/Development/MIPS-Processor/Execute.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\Execute.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module Execute
-** Error: C:/Development/MIPS-Processor/Execute.v(13): (vlog-2730) Undefined variable: 'CNTRL_REG_SIZE'.
 
-** Error: C:/Development/MIPS-Processor/Execute.v(49): (vlog-2730) Undefined variable: 'ALUINB'.
+Top level modules:
+	Execute
 
-** Error: C:/Development/MIPS-Processor/Execute.v(53): (vlog-2730) Undefined variable: 'BR'.
-
-** Error: C:/Development/MIPS-Processor/Execute.v(54): (vlog-2730) Undefined variable: 'JP'.
-
-** Error: C:/Development/MIPS-Processor/Execute.v(55): (vlog-2730) Undefined variable: 'JR'.
-
-** Error: C:/Development/MIPS-Processor/Execute.v(60): (vlog-2730) Undefined variable: 'ALUOP'.
-
-** Error (suppressible): C:/Development/MIPS-Processor/Execute.v(122): (vlog-13158) Operator '~|' is not supported.
-
-** Error: (vlog-13069) C:/Development/MIPS-Processor/Execute.v(130): near "case": syntax error, unexpected case.
-
-
-} {4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 18.0 19.0} {}} D:/DEVELOPMENT/MIPS-Processor/Execute.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/Execute.v
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/Execute.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/Execute.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module Execute
 
@@ -148,12 +106,13 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	RegisterFile
 
-} {} {}} C:/Development/MIPS-Processor/Execute_tb.v {0 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\Execute_tb.v}
+} {} {}} C:/Development/MIPS-Processor/Execute_tb.v {2 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\Execute_tb.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 ** Warning: C:\Development\MIPS-Processor\Execute_tb.v(1): (vlog-2283) Extra semicolon in $unit (global) scope.
 
 -- Compiling module Execute_tb
-** Error: C:\Development\MIPS-Processor\Execute_tb.v(17): (vlog-2730) Undefined variable: 'CNTRL_REG_SIZE'.
 
+Top level modules:
+	Execute_tb
 
-} {6.0 7.0} {}}
+} {} {}}
