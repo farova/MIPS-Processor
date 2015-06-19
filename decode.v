@@ -1,23 +1,30 @@
- module decode(clk, insn, pc, valid_insn);
+
+`include "control.vh"
+
+module decode(clk, insn, pc, valid_insn, rs, rt, rd, control);
 
 
 input clk, valid_insn;
 input[0:31] insn;
 input[0:31] pc;
 
+output wire[0:CNTRL_REG_SIZE] control;
+
 wire isNoop;
 
 
 wire[0:5] opcode;
-wire[0:4] rs;
-wire[0:4] rd;
-wire[0:4] rt;
+output wire[0:4] rs;
+output wire[0:4] rd;
+output wire[0:4] rt;
 wire[0:4] sa;
 wire[0:15] imm;
 wire[0:5] calc_type;
 wire[0:15] offset;
 wire[0:4] base;
 wire[0:26] insn_index;
+
+
 
 
 assign opcode = insn[0:5];
@@ -31,14 +38,32 @@ assign offset = insn[16:31];
 assign calc_type = insn[26:31];
 assign insn_index = insn[6:31];
 
+integer i;
+
 //Basic noop check
 
 assign isNoop = insn == 32'h00000000 ? 1 : 0;
+
+initial begin
+	for (i = 0; i < CNTROL_REG_SIZE; i++) begin
+		control[i] = 0;
+	end
+end
 
 
 
 
 always @(posedge clk) begin
+	
+	control[BR] <= 0;
+	control[JP] <= 0;
+	control[ALUINB] <= 0;
+	control[ALUOP] <= 0;
+	control[DMWE] <= 0;
+	control[RWE] <= 0;
+	control[Rdst] <= 0;
+	control[RWD] <= 0;
+
 
 	// Need this check because otherwise random instructions can sometimes be passed
 	
@@ -55,76 +80,87 @@ always @(posedge clk) begin
 				6'b000000: begin
 					case(calc_type)
 						6'b100000: begin //ADD
-							$display("ADD Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);	
+
 						end
 						6'b100001: begin //ADDU
-							$display("ADDU Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b100010: begin //SUB
-							$display("SUB Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b100011: begin //SUBU
-							$display("SUBU Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
-						end
-						6'b011000: begin //MULT
-							$display("MULT Rs: %d Rt: %d\n", rs, rt);
-						end
-						6'b011001: begin //MULTU
-							 $display("MULTU Rs: %d Rt: %d\n", rs, rt);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b011010: begin //DIV
-							$display("DIV Rs: %d Rt: %d\n", rs, rt);
+							control[RWE] <= 1;
 						end
 						6'b011011: begin //DIVU
-							$display("DIVU Rs: %d Rt: %d\n", rs, rt);
+							control[RWE] <= 1;
 						end
 						6'b010000: begin //MFHI
-							$display("MFHI Rd: %d\n", rd);
+							control[Rdst] <= 1;
 						end
 						6'b010010: begin //MFLO
-							$display("MFLO Rd: %d\n", rd);
+							control[Rdst] <= 1;
 						end
 						6'b101010: begin //SLT
-							$display("SLT Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b101011: begin //SLTU
-							$display("SLTU Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b000000: begin //SLL
-							$display("SLL Sa: %d Rt: %d Rd: %d\n", sa, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
-						6'b000010: begin //SLLV
-							$display("SLLV Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+						6'b000100: begin //SLLV
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b000010: begin //SRL
-							$display("SRL Sa: %d Rt: %d Rd: %d\n", sa, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b000110: begin //SRLV
-							$display("SRLV Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b000011: begin //SRA
-							$display("SRA Sa: %d Rt: %d Rd: %d\n", sa, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b000111: begin //SRAV
-							$display("SRAV Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b100100: begin //AND
-							$display("AND Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b100101: begin //OR
-							$display("OR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b100110: begin //XOR
-							$display("XOR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
 						6'b100111: begin //NOR
-							$display("NOR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+							control[RWE] <= 1;
+							control[Rdst] <= 1;
 						end
-						6'b001001: begin
-							$display("JALR Rs: %d Rd: %d\n", rs, rd);
+						6'b001001: begin //JALR
+							control[JP] <= 1;
+							control[JR] <= 1;
 						end
-						6'b001000: begin
-							$display("JR Rs: %d\n", rs);
+						6'b001000: begin //JR
+							control[JP] <= 1;
+							control[JR] <= 1;
 						end
 						default: begin
 							$display("unimplemented calculation type instruction\n");
@@ -134,85 +170,105 @@ always @(posedge clk) begin
 				end
 
 				6'b001001: begin //ADDIU
-					$display("ADDIU Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RDST] <= 1;
 				end
 
 				6'b001010: begin //SLTI
-					$display("SLTI Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RDST] <= 1;				
 				end
 
 				6'b001011: begin //SLTIU
-					$display("SLTIU Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RDST] <= 1;
 				end
 
 				6'b001101: begin //ORI
-					$display("ORI Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RDST] <= 1;
 				end
 
-				6'b001110: begin //ORI
-					$display("XORI Rs: %d Rt: %d Imm: %d\n", rs, rt, imm);
+				6'b001110: begin //XORI
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RDST] <= 1;
 				end
 
 				6'b100011: begin //LW
-					$display("LW base: %d Rt: %d offset: %d\n", base, rt, offset);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RWD] <= 1;
 				end
 
 				6'b101011: begin //SW
-					$display("SW base: %d Rt: %d offset: %d\n", base, rt, offset);
+					control[ALUINB] <= 1;
+					control[DMWE] <= 1;
 				end
 
 				6'b001111: begin //LUI
-					$display("LUI Rt: %d Imm: %d\n", rt, imm);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RWD] <= 1;
 				end
 
 				6'b100000: begin //LB
-					$display("LB base: %d Rt: %d offset: %d\n", base, rt, offset);
+					control[ALUINB] <= 1;
+					control[RWE] <= 1;
+					control[RWD] <= 1;
 				end
 
 				6'b101000: begin //SB
-					$display("SB base: %d Rt: %d offset: %d\n", base, rt, offset);
+					control[ALUINB] <= 1;
+					control[DMWE] <= 1;
 				end
 
 				6'b100100: begin //LBU
-					$display("LBU base: %d Rt: %d offset: %d\n", base, rt, offset);
+					control[ALUINB] <= 1;
+					control[DMWE] <= 1;
 				end
 
 				6'b000010: begin //J
-					$display("J target: %d\n", insn_index);
+					control[JP] <= 1;
 				end		
 
 				6'b000011: begin //JAL
-					$display("JAL target: %d\n", insn_index);
+					control[JP] <= 1;
 				end
 
 				6'b000100: begin //BEQ and BEQZ
-					$display("BEQ Rs: %d Rt: %d offset: %d\n", rs, rt, offset);	
+					control[BR] <= 1;
+					control[ALUOP] <= 1;	
 					
 				end
 
 				6'b000101: begin //BNE and BNEZ
-					$display("BNE Rs: %d Rt: %d offset: %d\n", rs, rt, offset);	
-					
+					control[BR] <= 1;
+					control[ALUOP] <= 1;		
 				end
 
 				6'b000001: begin //BGEZ and BLTZ
-
-					if (rt == 6'b000000) begin
-						$display("BLTZ Rs: %d offset: %d\n", rs, offset);
-					end else if (rt == 6'b000001) begin
-						$display("BGEZ Rs: %d offset: %d\n", rs, offset);
-					end else begin
-						$display("REGGIM not implemented\n");
-					end
-					
+					control[BR] <= 1;
+					control[ALUOP] <= 1;
 				end
 
 				6'b000111: begin //BGTZ
-					$display("BGTZ Rs: %d offset: %d\n", rs, offset);
+					control[BR] <= 1;
+					control[ALUOP] <= 1;
 				end
 
 				6'b000110: begin //BLEZ
-					$display("BLEZ Rs: %d offset: %d\n", rs, offset);
+					control[BR] <= 1;
+					control[ALUOP] <= 1;
+				end
+
+				6'b011100: begin //MUL
+					control[RWE] <= 1;
+					control[Rdst] <= 1;
 				end
 
 				default: begin

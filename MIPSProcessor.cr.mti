@@ -1,9 +1,9 @@
-{C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/decode.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/decode.v}
+C:/Development/MIPS-Processor/mainMem_tb.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/mainMem_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module decode
+-- Compiling module mainMem_tb
 
 Top level modules:
-	decode
+	mainMem_tb
 
 } {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
@@ -12,18 +12,121 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	mainMem
 
-} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/fetch_decode_tb.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/fetch_decode_tb.v}
+} {} {}} C:/Development/MIPS-Processor/fetch_decode_tb.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/fetch_decode_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module fetch_decode_tb
 
 Top level modules:
 	fetch_decode_tb
 
-} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/fetch.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/fetch.v}
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/fetch_decode_tb.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/fetch_decode_tb.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module fetch_decode_tb
+
+Top level modules:
+	fetch_decode_tb
+
+} {} {}} C:/Development/MIPS-Processor/decode.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/decode.v
+
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module decode
+
+Top level modules:
+	decode
+
+} {} {}} C:/Development/MIPS-Processor/mainMem.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/mainMem.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mainMem
+
+Top level modules:
+	mainMem
+
+} {} {}} C:/Development/MIPS-Processor/RegisterFile.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/RegisterFile.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module RegisterFile
+
+Top level modules:
+	RegisterFile
+
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/mainMem.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/mainMem.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mainMem
+
+Top level modules:
+	mainMem
+
+} {} {}} C:/Development/MIPS-Processor/RegisterFile_tb.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/RegisterFile_tb.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module RegisterFile_tb
+
+Top level modules:
+	RegisterFile_tb
+
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mainMem_tb
+
+Top level modules:
+	mainMem_tb
+
+} {} {}} C:/Development/MIPS-Processor/fetch.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/fetch.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module fetch
 
 Top level modules:
 	fetch
 
-} {} {}}
+} {} {}} C:/Development/MIPS-Processor/Execute.v {0 {vlog -work work -stats=none C:/Development/MIPS-Processor/Execute.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+** Warning: C:/Development/MIPS-Processor/Execute.v(1): (vlog-2283) Extra semicolon in $unit (global) scope.
+
+-- Compiling module Execute
+** Error: C:/Development/MIPS-Processor/Execute.v(11): (vlog-2730) Undefined variable: 'CNTRL_REG_SIZE'.
+
+** Error: C:/Development/MIPS-Processor/Execute.v(32): (vlog-2730) Undefined variable: 'ALUINB'.
+
+** Error: C:/Development/MIPS-Processor/Execute.v(39): (vlog-2730) Undefined variable: 'BR'.
+
+** Error: C:/Development/MIPS-Processor/Execute.v(41): (vlog-2730) Undefined variable: 'JP'.
+
+** Error: C:/Development/MIPS-Processor/Execute.v(48): (vlog-2730) Undefined variable: 'ALUOP'.
+
+** Error: C:/Development/MIPS-Processor/Execute.v(3): Identifier must be declared with a port mode: control.
+
+} {6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0 17.0} {}} D:/DEVELOPMENT/MIPS-Processor/fetch.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/fetch.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module fetch
+
+Top level modules:
+	fetch
+
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/Execute.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/Execute.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module Execute
+
+Top level modules:
+	Execute
+
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/decode.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/decode.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module decode
+
+Top level modules:
+	decode
+
+} {} {}} D:/DEVELOPMENT/MIPS-Processor/RegisterFile.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/RegisterFile.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module RegisterFile
+
+Top level modules:
+	RegisterFile
+
+} {} {}} C:/Development/MIPS-Processor/Execute_tb.v {0 {vlog -work work -stats=none C:/Development/MIPS-Processor/Execute_tb.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module Execute_tb
+** Error: C:/Development/MIPS-Processor/Execute_tb.v(17): (vlog-2730) Undefined variable: 'CNTRL_REG_SIZE'.
+
+** Error (suppressible): C:/Development/MIPS-Processor/Execute_tb.v(38): (vlog-2388) 'data_out' already declared in this scope (Execute_tb).
+
+
+} {4.0 5.0} {}}

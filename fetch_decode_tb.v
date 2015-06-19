@@ -81,6 +81,7 @@ decode decode_module(clock, data_out, pc_in, valid_insn);
 	// Opens file for read
 	initial begin
 		filename = "bench-v2/fact.x";
+		$display("%s\n", filename);
   		OpenFile();
 	end
 
