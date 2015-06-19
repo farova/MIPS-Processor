@@ -55,8 +55,6 @@ assign effective_addr = control[JP] ? jump_addr : effective_branch_addr;
 assign jump_addr = control[JR] ? rs : (jump_insn_index << 2);
 
 
-assign temp_imm = imm << 16;
-
 always @(posedge clock) begin
 	
 	if (!control[ALUOP]) begin
