@@ -252,15 +252,18 @@ always @(posedge clk) begin
 				end
 
 				6'b000111: begin //BGTZ
-					$display("BGTZ Rs: %d offset: %d\n", rs, offset);
+					control[BR] <= 1;
+					control[ALUOP] <= 1;
 				end
 
 				6'b000110: begin //BLEZ
-					$display("BLEZ Rs: %d offset: %d\n", rs, offset);
+					control[BR] <= 1;
+					control[ALUOP] <= 1;
 				end
 
 				6'b011100: begin //MUL
-					$display("MUL Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
+					control[RWE] <= 1;
+					control[Rdst] <= 1;
 				end
 
 				default: begin

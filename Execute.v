@@ -59,7 +59,7 @@ assign temp_imm = imm << 16;
 
 always @(posedge clock) begin
 	
-	if (control[ALUOP]) begin
+	if (!control[ALUOP]) begin
 		case(func)
 			6'b100000: begin //ADD
 				data_out <= alu_A + alu_B;
