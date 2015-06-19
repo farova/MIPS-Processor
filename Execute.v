@@ -10,7 +10,7 @@ input wire[0:31]rt;
 input wire[0:31]insn;
 input wire[0:31]pc;
 
-input wire[0:CNTRL_REG_SIZE-1] control;
+input wire[0:`CNTRL_REG_SIZE-1] control;
 
 
 output reg[0:31]data_out;
@@ -26,11 +26,12 @@ wire[0:27] jump_insn_index;
 wire[0:31] jump_addr;
 wire[0:31] branch_address;
 wire[0:31] effective_branch_addr;
-wire z;
 wire[0:5] sa;
 wire[0:6] opcode;
 wire[0:4] base;
 wire[0:15] offset;
+
+reg z;
 
 reg[0:31] HI;
 reg[0:31] LO;
@@ -46,18 +47,18 @@ assign base = insn[6:10];
 
 
 
-assign alu_A = control[ALUINB] ? $signed(imm): rt; 
+assign alu_A = control[`ALUINB] ? $signed(imm): rt; 
 assign alu_B = rs;
 assign insn_leftshift = insn;
 assign branch_address = (imm_leftshift << 2) + pc;
-assign effective_branch_addr = (control[BR] & z) ? branch_address : pc;
-assign effective_addr = control[JP] ? jump_addr : effective_branch_addr;
-assign jump_addr = control[JR] ? rs : (jump_insn_index << 2);
+assign effective_branch_addr = (control[`BR] & z) ? branch_address : pc;
+assign effective_addr = control[`JP] ? jump_addr : effective_branch_addr;
+assign jump_addr = control[`JR] ? rs : (jump_insn_index << 2);
 
 
 always @(posedge clock) begin
 	
-	if (!control[ALUOP]) begin
+	if (!control[`ALUOP]) begin
 		case(func)
 			6'b100000: begin //ADD
 				data_out <= alu_A + alu_B;
@@ -119,7 +120,7 @@ always @(posedge clock) begin
 				data_out <= alu_A ^ alu_B;
 			end
 			6'b100111: begin //NOR
-				data_out <= alu_A ~| alu_B;
+				data_out <= ~(alu_A | alu_B);
 			end
 			6'b001001: begin //JALR
 				data_out <= pc + 4;
@@ -127,34 +128,34 @@ always @(posedge clock) begin
 			default: begin
 				$display("unimplemented calculation type instruction\n");
 			end
-			case(opcode)
-				6'b001001: begin //ADDIU
-					data_out <= alu_A + alu_B;
-				end
+		endcase
+		case(opcode)
+			6'b001001: begin //ADDIU
+				data_out <= alu_A + alu_B;
+			end
 
-				6'b001010: begin //SLTI
-					data_out <= (alu_A < alu_B) ? 32'h00000001 : 32'h00000000;
-				end
+			6'b001010: begin //SLTI
+				data_out <= (alu_A < alu_B) ? 32'h00000001 : 32'h00000000;
+			end
 
-				6'b001011: begin //SLTIU
-					data_out <= (alu_A < alu_B) ? 32'h00000001 : 32'h00000000;
-				end
+			6'b001011: begin //SLTIU
+				data_out <= (alu_A < alu_B) ? 32'h00000001 : 32'h00000000;
+			end
 
-				6'b001101: begin //ORI
-					data_out <= alu_A | alu_B;
-				end
+			6'b001101: begin //ORI
+				data_out <= alu_A | alu_B;
+			end
 
-				6'b001110: begin //XORI
-					data_out <= alu_A ^ alu_B;
-				end
+			6'b001110: begin //XORI
+				data_out <= alu_A ^ alu_B;
+			end
 
-				6'b011100: begin //MUL
-					
-				end
-				default: begin
-						$display("unimplemented instruction\n");
-				end
-			endcase
+			6'b011100: begin //MUL
+				
+			end
+			default: begin
+					$display("unimplemented instruction\n");
+			end
 		endcase
 	end else begin
 		case(opcode)
