@@ -123,7 +123,7 @@ assign control_in = control;
 
 // Opens file for read
 	initial begin
-		filename = "bench-v2/fact.x";
+		filename = "bench-v2/SimpleAdd.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end
