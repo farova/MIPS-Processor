@@ -157,6 +157,7 @@ always @(posedge clock) begin
 					$display("unimplemented instruction\n");
 			end
 		endcase
+		$display("ALU_A: %d, ALU_B: %d, ALU_OUTPUT: %d", data_out);
 	end else begin
 		case(opcode)
 				6'b000100: begin //BEQ and BEQZ
@@ -184,9 +185,10 @@ always @(posedge clock) begin
 					z <= (alu_A <= 5'b00000) ? 1 : 0;
 				end
 		endcase
+		$display("ALU_A: %d, ALU_B: %d, ALU_OUTPUT: %d, Eff_Addr: %d", z, effective_addr);
 	end
 
-	$display("ALU_OUTPUT: %d", data_out);
+	
 
 end
 
