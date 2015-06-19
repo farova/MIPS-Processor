@@ -14,7 +14,7 @@ reg[0:31] pc_in;
 
 reg[0:31] insn;
 reg[0:31] pc;
-reg[0:CNTRL_REG_SIZE] control;
+reg[0:`CNTRL_REG_SIZE] control;
 
 
 reg[0:4] rsIn;
@@ -35,7 +35,6 @@ reg eof_flag;
 reg[0:1] acc_size;
 reg valid_insn;
 
-wire[0:31] data_out;
 wire busy;
 wire[0:1] acc_size_out;
 wire[0:31] pc_out;
