@@ -6,7 +6,7 @@ input wire clock;
 input wire[0:4] rsIn;
 input wire[0:4] rtIn;
 input wire[0:4] rdIn;
-input wire[0:`CNTRL_REG_SIZE] control;
+input wire[0:`CNTRL_REG_SIZE-1] control;
 
 input wire[0:31] writeBackData;
 

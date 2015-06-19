@@ -8,7 +8,7 @@ reg[0:4] rsIn;
 reg[0:4] rtIn;
 reg[0:4] rdIn;
 reg[0:31] writeBackData;
-reg[0:`CNTRL_REG_SIZE] control;
+reg[0:`CNTRL_REG_SIZE-1] control;
 
 wire[0:31] rsOut;
 wire[0:31] rtOut;

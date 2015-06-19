@@ -1,11 +1,4 @@
-C:/Development/MIPS-Processor/mainMem_tb.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/mainMem_tb.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module mainMem_tb
-
-Top level modules:
-	mainMem_tb
-
-} {} {}} {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v}
+{C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v} {1 {vlog -work work -stats=none {C:/Users/Nish Krishnan/Documents/429/MIPS-Processor/mainMem.v}
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module mainMem
 
@@ -19,27 +12,8 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	fetch_decode_tb
 
-
-} {} {}} C:/Development/MIPS-Processor/decode.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\decode.v}
+} {} {}} F:/Development/MIPS-Processor/control.vh {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/control.vh
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module decode
-
-Top level modules:
-	decode
-
-} {} {}} C:/Development/MIPS-Processor/mainMem.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/mainMem.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module mainMem
-
-Top level modules:
-	mainMem
-
-} {} {}} C:/Development/MIPS-Processor/RegisterFile.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/RegisterFile.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module RegisterFile
-
-Top level modules:
-	RegisterFile
 
 } {} {}} D:/DEVELOPMENT/MIPS-Processor/mainMem.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/mainMem.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
@@ -48,15 +22,19 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	mainMem
 
-} {} {}} C:/Development/MIPS-Processor/control.vh {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\control.vh}
+} {} {}} F:/Development/MIPS-Processor/fetch_decode_tb.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/fetch_decode_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
-
-} {} {}} C:/Development/MIPS-Processor/RegisterFile_tb.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\RegisterFile_tb.v}
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module RegisterFile_tb
+-- Compiling module fetch_decode_tb
 
 Top level modules:
-	RegisterFile_tb
+	fetch_decode_tb
+
+} {} {}} F:/Development/MIPS-Processor/mainMem.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/mainMem.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mainMem
+
+Top level modules:
+	mainMem
 
 } {} {}} D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/mainMem_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
@@ -65,13 +43,6 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	mainMem_tb
 
-} {} {}} C:/Development/MIPS-Processor/fetch.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none C:/Development/MIPS-Processor/fetch.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module fetch
-
-Top level modules:
-	fetch
-
 } {} {}} D:/DEVELOPMENT/MIPS-Processor/fetch.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/fetch.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module fetch
@@ -79,12 +50,12 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	fetch
 
-} {} {}} C:/Development/MIPS-Processor/Execute.v {1 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\Execute.v}
+} {} {}} F:/Development/MIPS-Processor/mainMem_tb.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/mainMem_tb.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module Execute
+-- Compiling module mainMem_tb
 
 Top level modules:
-	Execute
+	mainMem_tb
 
 } {} {}} D:/DEVELOPMENT/MIPS-Processor/Execute.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/Execute.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
@@ -92,6 +63,13 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 
 Top level modules:
 	Execute
+
+} {} {}} F:/Development/MIPS-Processor/fetch.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/fetch.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module fetch
+
+Top level modules:
+	fetch
 
 } {} {}} D:/DEVELOPMENT/MIPS-Processor/decode.v {1 {vlog -work work -stats=none D:/DEVELOPMENT/MIPS-Processor/decode.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
@@ -107,13 +85,11 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	RegisterFile
 
-} {} {}} C:/Development/MIPS-Processor/Execute_tb.v {2 {vlog -work work +incdir+C:/Development/MIPS-Processor -stats=none {C:\Development\MIPS-Processor\Execute_tb.v}
+} {} {}} F:/Development/MIPS-Processor/Execute.v {1 {vlog -work work -stats=none F:/Development/MIPS-Processor/Execute.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
-** Warning: C:\Development\MIPS-Processor\Execute_tb.v(1): (vlog-2283) Extra semicolon in $unit (global) scope.
-
--- Compiling module Execute_tb
+-- Compiling module Execute
 
 Top level modules:
-	Execute_tb
+	Execute
 
 } {} {}}

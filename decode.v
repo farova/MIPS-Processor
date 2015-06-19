@@ -8,7 +8,7 @@ input clk, valid_insn;
 input[0:31] insn;
 input[0:31] pc;
 
-output reg[0:`CNTRL_REG_SIZE] control;
+output reg[0:`CNTRL_REG_SIZE-1] control;
 
 wire isNoop;
 

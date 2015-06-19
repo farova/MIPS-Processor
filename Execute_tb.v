@@ -12,15 +12,15 @@ reg[0:31] data_in;
 reg[0:31] tempaddr;
 reg[0:31] pc_in;
 
-reg[0:31] insn;
+wire[0:31] insn;
 reg[0:31] insn_in;
 reg[0:31] pc;
-reg[0:`CNTRL_REG_SIZE] control;
+reg[0:`CNTRL_REG_SIZE-1] control;
 
 
-reg[0:4] rsIn;
-reg[0:4] rtIn;
-reg[0:4] rdIn;
+wire[0:4] rsIn;
+wire[0:4] rtIn;
+wire[0:4] rdIn;
 reg[0:31] writeBackData;
 
 wire[0:31] rsOut;
