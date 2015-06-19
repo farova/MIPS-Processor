@@ -1,4 +1,4 @@
-module decode(clk, insn, pc, valid_insn);
+module decode(clk, insn, pc, valid_insn);//, rs, rt, rd);
 
 
 input clk, valid_insn;

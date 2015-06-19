@@ -1,4 +1,4 @@
-include "control.vh"
+`include "control.vh";
 
 module Execute(clock, pc, rs, rt, insn, control, data_out);
 
