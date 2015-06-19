@@ -116,10 +116,10 @@ always @(posedge clk) begin
 						6'b100111: begin //NOR
 							$display("NOR Rs: %d Rt: %d Rd: %d\n", rs, rt, rd);
 						end
-						6'b001001: begin
+						6'b001001: begin //JALR
 							$display("JALR Rs: %d Rd: %d\n", rs, rd);
 						end
-						6'b001000: begin
+						6'b001000: begin //JR
 							$display("JR Rs: %d\n", rs);
 						end
 						default: begin
