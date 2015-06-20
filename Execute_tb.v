@@ -15,6 +15,7 @@ reg[0:31] pc_in;
 wire[0:31] insn;
 reg[0:31] insn_in;
 reg[0:31] pc;
+reg[0:31] pc_ex;
 wire[0:`CNTRL_REG_SIZE-1] control;
 
 wire[0:`CNTRL_REG_SIZE-1] control_in;
@@ -32,8 +33,8 @@ wire[0:4] rtOut_dec;
 wire[0:4] rdOut_dec;
 reg[0:31] writeBackData;
 
-reg[0:31] rsOut_reg;
-reg[0:31] rtOut_reg;
+wire[0:31] rsOut_reg;
+wire[0:31] rtOut_reg;
 wire[0:31] data_out;
 
 parameter START_ADDRESS = 32'h80020000;
@@ -66,7 +67,7 @@ decode 			decode_module(clock, insn, pc_in, valid_insn, rsOut_dec, rtOut_dec, rd
 RegisterFile 	register_module(clock, rsIn_reg, rtIn_reg, rdIn_reg, rsOut_reg, rtOut_reg, writeBackData, control_in);
 
 // EXECUTE
-Execute 		execute_module(clock, pc, rsIn_exec, rtIn_exec, insn, control_in, data_out);
+Execute 		execute_module(clock, pc_ex, rsIn_exec, rtIn_exec, insn_in, control_in, data_out);
 
 
 
@@ -170,13 +171,17 @@ assign control_in = control;
 
 		addr <= pc_out;
 		pc_in <= pc;
+		pc_ex <= pc_in;
 		pc <= pc_out;
 
 		@(posedge clock);
 		
 		pc_in <= pc;
+		pc_ex <= pc_in;
 		pc <= pc_out;
 		addr <= pc_out;
+
+		insn_in = insn;
 
 		while (loop_count < counter) begin
 			@(posedge clock);
@@ -184,9 +189,12 @@ assign control_in = control;
 				valid_insn <= 1;
 			end
 			pc_in <= pc;
+			pc_ex <= pc_in;
 			pc <= pc_out;
 			addr <= pc_out;
 			loop_count <= loop_count + 1;
+
+			insn_in = insn;
 
 		end
 
