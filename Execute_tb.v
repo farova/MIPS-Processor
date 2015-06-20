@@ -32,8 +32,8 @@ wire[0:4] rtOut_dec;
 wire[0:4] rdOut_dec;
 reg[0:31] writeBackData;
 
-wire[0:31] rsOut_reg;
-wire[0:31] rtOut_reg;
+reg[0:31] rsOut_reg;
+reg[0:31] rtOut_reg;
 wire[0:31] data_out;
 
 parameter START_ADDRESS = 32'h80020000;
