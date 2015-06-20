@@ -105,9 +105,6 @@ assign control_in = control;
 		end
 	endtask
 
-// Increment time 
-	always #10 clock = !clock;
-
 
 // Initilization of values
 	initial begin
@@ -191,18 +188,9 @@ assign control_in = control;
 			addr <= pc_out;
 			loop_count <= loop_count + 1;
 
-
-
-
-
-
-
-
-
-
-
-
 		end
+
+		$finish;
 
 	end
 

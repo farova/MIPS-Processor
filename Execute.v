@@ -7,7 +7,7 @@ module Execute(clock, pc, rs, rt, insn, control, data_out);
 input wire clock;
 input wire[0:31]rs;
 input wire[0:31]rt;
-input wire[0:31]insn;
+input[0:31]insn;
 input wire[0:31]pc;
 
 input wire[0:`CNTRL_REG_SIZE-1] control;
@@ -126,7 +126,6 @@ always @(posedge clock) begin
 				data_out <= pc + 4;
 			end
 			default: begin
-				$display("unimplemented calculation type instruction\n");
 			end
 		endcase
 		case(opcode)
@@ -154,7 +153,6 @@ always @(posedge clock) begin
 				
 			end
 			default: begin
-					$display("unimplemented instruction\n");
 			end
 		endcase
 		$display("ALU_A: %d, ALU_B: %d, ALU_OUTPUT: %d", alu_A, alu_B, data_out);
