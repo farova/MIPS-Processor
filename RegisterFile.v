@@ -19,7 +19,7 @@ integer i;
 
 initial begin
 	for (i = 0; i < 32; i = i + 1) begin
-		registers[i] = i;
+	registers[i] = i;
 	end
 end
 
@@ -33,9 +33,9 @@ assign rtOut = registers[rtIn];
 always @(posedge clock) begin
 	if (control[`RWE]) begin
 		if (control[`RDST]) begin
-			registers[rdIn] <= writeBackData;
+			//registers[rdIn] <= writeBackData;
 		end else begin
-			registers[rtIn] <= writeBackData;
+			//registers[rtIn] <= writeBackData;
 		end
 		
 	end

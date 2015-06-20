@@ -20,6 +20,7 @@ wire[0:15] imm;
 wire[0:31] temp_imm;
 wire[0:31] imm_leftshift;
 wire[0:31] alu_A;
+wire[0:31] alu_B;
 wire[0:5] func;
 wire[0:31] insn_leftshift;
 wire[0:27] jump_insn_index;
@@ -43,7 +44,7 @@ assign jump_insn_index = insn[6:31];
 assign sa = insn[21:25];
 assign offset = insn[16:31];
 assign base = insn[6:10];
-
+assign opcode = insn[0:5];
 
 
 
