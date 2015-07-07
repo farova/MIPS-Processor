@@ -1,7 +1,7 @@
 
 `include "control.vh"
 
-module decode(clk, insn, pc, valid_insn, rs, rt, rd, control);
+module decode(clk, insn, pc, valid_insn, control);
 
 
 input clk, valid_insn;
@@ -64,6 +64,7 @@ always @(posedge clk) begin
 	control[`RWE] <= 0;
 	control[`RDST] <= 0;
 	control[`RWD] <= 0;
+	control[`RA] <= 0;
 
 
 	// Need this check because otherwise random instructions can sometimes be passed
@@ -74,7 +75,7 @@ always @(posedge clk) begin
 
 	if (valid_insn) begin
 
-		$display("PC: %h Instruction: %h", pc, insn);
+		$display("Instruction: %h",insn);
 
 		if (!isNoop) begin
 			case(opcode)
@@ -179,6 +180,8 @@ always @(posedge clk) begin
 						6'b001001: begin //JALR
 							control[`JP] <= 1;
 							control[`JR] <= 1;
+							control[`RWE] <= 1;
+							control[`RDST] <= 1;
 							$display("JALR Rs: %d Rd: %d", rs, rd);
 						end
 						6'b001000: begin //JR
@@ -196,35 +199,30 @@ always @(posedge clk) begin
 				6'b001001: begin //ADDIU
 					control[`ALUINB] <= 1;
 					control[`RWE] <= 1;
-					control[`RDST] <= 1;
 					$display("ADDIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b001010: begin //SLTI
 					control[`ALUINB] <= 1;
-					control[`RWE] <= 1;
-					control[`RDST] <= 1;	
+					control[`RWE] <= 1;	
 					$display("SLTI Rs: %d Rt: %d Imm: %d", rs, rt, imm);			
 				end
 
 				6'b001011: begin //SLTIU
 					control[`ALUINB] <= 1;
 					control[`RWE] <= 1;
-					control[`RDST] <= 1;
 					$display("SLTIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b001101: begin //ORI
 					control[`ALUINB] <= 1;
 					control[`RWE] <= 1;
-					control[`RDST] <= 1;
 					$display("ORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b001110: begin //XORI
 					control[`ALUINB] <= 1;
 					control[`RWE] <= 1;
-					control[`RDST] <= 1;
 					$display("XORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
@@ -269,12 +267,15 @@ always @(posedge clk) begin
 
 				6'b000010: begin //J
 					control[`JP] <= 1;
-					$display("J target: %d", insn_index);
+					$display("J target: %h", insn_index);
 				end		
 
 				6'b000011: begin //JAL
 					control[`JP] <= 1;
-					$display("JAL target: %d", insn_index);
+					control[`RA] <= 1;
+					control[`RWE] <= 1;
+					control[`RDST] <= 1;
+					$display("JAL target: %h", insn_index);
 				end
 
 				6'b000100: begin //BEQ and BEQZ
@@ -327,7 +328,7 @@ always @(posedge clk) begin
 
 			endcase
 		end else begin
-			$display("noop\n");
+			$display("noop");
 		end
 
 	end

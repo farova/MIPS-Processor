@@ -7,6 +7,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	parameter MEM_SIZE 	= 1048578; // 1MB
 	parameter MEM_WIDTH 	= 8;
 	parameter START_ADDRESS = 32'h80020000;
+	parameter STACK_PNTR_BASE_ADDR = 32'h80120002;
 
 	// Inputs
 	input	 			clk, wren, enable;
@@ -36,7 +37,9 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	wire[0:ADDRESS_SIZE-1]  	mem_index;	// translated address index inside memory
 	wire[0:ADDRESS_SIZE-1] 		start_index;
 	wire 				valid_addr;
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///// TASKS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	task dump; 
    		integer i; 
    		integer filenum; 
@@ -48,7 +51,44 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
          			$fdisplay(filenum,"%h : %h", i, mem_block[i]); 
    			end 
 		end 
-	endtask 
+	endtask
+
+	task PrintStack;
+		integer i;
+		reg[0:31] result;
+		reg[0:31] address;
+		begin
+			$display("\nPrinting Stack\n");
+			address = STACK_PNTR_BASE_ADDR;
+			for (i = 0; i < 10; i = i + 1) begin
+				result[0:7] = mem_block[address - START_ADDRESS];
+				result[8:15] = mem_block[(address + 1) - START_ADDRESS];
+				result[16:23] = mem_block[(address + 2) - START_ADDRESS]; 
+				result[24:31] = mem_block[(address + 3) - START_ADDRESS];
+				$display("Stack at address: %h, value: %d", address, result);
+				address = address - 4;
+			end
+		end
+	endtask
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///// COMBINATIONAL LOGIC
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Memory conversion
+	assign start_index = addr - START_ADDRESS;
+
+	//increments memory index to do burst reads
+	assign mem_index = start_index + (counter << 2);
+	
+	// control signals
+	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
+
+	// assign number of words to read based on access size
+	assign num_words = 
+		(acc_size == 2'b00)? 4'h0:
+		(acc_size == 2'b01)? 4'h3:
+		(acc_size == 2'b10)? 4'h7:
+					4'hf;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Initilization
 	initial begin
@@ -61,14 +101,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 
 	end
 
-	// Memory conversion
-	assign start_index = addr - START_ADDRESS;
 
-	//increments memory index to do burst reads
-	assign mem_index = start_index + (counter << 2);
-	
-	// control signals
-	assign valid_addr = addr >= START_ADDRESS && mem_index < MEM_SIZE;
 	
 	// Write data
 	always @ (posedge clk) begin
@@ -108,11 +141,5 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 		wren_reg <= wren;
 	end
 
-	// assign number of words to read based on access size
-	assign num_words = 
-		(acc_size == 2'b00)? 4'h0:
-		(acc_size == 2'b01)? 4'h3:
-		(acc_size == 2'b10)? 4'h7:
-					4'hf;
 
 endmodule
