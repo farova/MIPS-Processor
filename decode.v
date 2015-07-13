@@ -56,15 +56,11 @@ end
 
 always @(posedge clk) begin
 	
-	control[`BR] <= 0;
-	control[`JP] <= 0;
-	control[`ALUINB] <= 0;
-	control[`ALUOP] <= 0;
-	control[`DMWE] <= 0;
-	control[`RWE] <= 0;
-	control[`RDST] <= 0;
-	control[`RWD] <= 0;
-	control[`RA] <= 0;
+	// Set all control bits to 0 so that they can be set depending on the instruction
+
+	for (i = 0; i < `CNTRL_REG_SIZE; i = i + 1) begin
+		control[i] <= 0;
+	end
 
 
 	// Need this check because otherwise random instructions can sometimes be passed

@@ -184,7 +184,7 @@ wire[0:4] rtAddr;
 
 	// Opens file for read
 	initial begin
-		filename = "bench-v2/BubbleSort.x";
+		filename = "bench-v2/Swap.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end
@@ -247,10 +247,11 @@ wire[0:4] rtAddr;
 					dataMem_module.PrintStack();
 					$finish;
 				end
-				/*------------- PRINTS THE STACK FOR BUBBLE SORT ONCE THE ARRAY HAS BEEN LOADED TO STACK -------------*/
+				
+				/*------------- PRINTS THE STACK FOR BUBBLE SORT ONCE THE ARRAY HAS BEEN LOADED TO STACK -------------
 				if (pc_fetch == 32'h8002005c) begin
 					dataMem_module.PrintStack();
-				end
+				end */
 
 			@(posedge clock); 
 				pc_reg1 <= pc_fetch; //Loads PC + 4 into PC register
