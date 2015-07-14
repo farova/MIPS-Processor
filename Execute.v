@@ -18,7 +18,7 @@ output reg[0:31]data_out;
 output wire[0:31]effective_addr;
 
 wire[0:15] imm;
-wire[0:31] temp_imm;
+wire[0:31] imm_32;
 wire[0:31] imm_leftshift;
 wire[0:31] alu_A;
 wire[0:31] alu_B;
@@ -54,7 +54,7 @@ assign branch_bits = opcode[3:5];
 assign other_opcode_bits = opcode[0:2];
 assign rt_addr = insn[11:15];
 
-assign temp_imm = imm;
+assign imm_32 = imm;
 
 assign alu_A = control[`ALUINB] ? {{16{imm[0]}}, imm[0:15]}: rt; 
 assign alu_B = rs;
@@ -201,7 +201,7 @@ always @(posedge clock) begin
 				data_out <= $signed(alu_A) + alu_B;
 			end
 			6'b001111: begin //LUI
-				data_out <= temp_imm << 16;
+				data_out <= imm_32 << 16;
 			end
 			6'b100000: begin //LB
 				data_out <= alu_A + alu_B;

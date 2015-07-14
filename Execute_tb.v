@@ -37,6 +37,7 @@ wire insnMem_busy;
 wire[0:31] insnMem_addr;
 wire[0:31] insnMem_data_in;
 wire[0:31] insnMem_out;
+wire insnMem_byteOnly, insnMem_ubyte;
 
 //Registers for address and data_in
 reg[0:31] load_mem_addr;
@@ -76,6 +77,7 @@ wire[0:31] dataMem_addr;
 wire[0:31] dataMem_data_in;
 wire[0:31] dataMem_out;
 wire dataMem_busy;
+wire dataMem_byteOnly, dataMem_ubyte;
 
 
 //File reading registers and values
@@ -100,11 +102,11 @@ wire[0:4] rtAddr;
 ///// MODULE DEFINITIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	fetch 			fetch_module(clock, stall, pc_fetch, rw, acc_size_out, control_ex, jump_addr);
-	mainMem 		insnMem_module(clock, insnMem_addr, insnMem_data_in, insnMem_out, insnMem_acc_size, insnMem_wren, insnMem_busy, insnMem_enable);
+	mainMem 		insnMem_module(clock, insnMem_addr, insnMem_data_in, insnMem_out, insnMem_acc_size, insnMem_wren, insnMem_busy, insnMem_enable, insnMem_byteOnly, insnMem_ubyte);
 	decode 			decode_module(clock, insn_dec, pc_dec, valid_insn, control);
 	RegisterFile 	register_module(clock, insn_dec, rtIn_reg, rdIn_reg, rsOut_reg, rtOut_reg, writeBackData, control_reg2);
 	Execute 		execute_module(clock, pc_ex, rsIn_ex, rtIn_ex, insn_ex, valid_ex, control_ex, exec_out, effective_addr);
-	mainMem			dataMem_module(clock, dataMem_addr, dataMem_data_in, dataMem_out, dataMem_acc_size, dataMem_wren, dataMem_busy, dataMem_enable);
+	mainMem			dataMem_module(clock, dataMem_addr, dataMem_data_in, dataMem_out, dataMem_acc_size, dataMem_wren, dataMem_busy, dataMem_enable, dataMem_byteOnly, dataMem_ubyte);
 	writeBack 		writeBack_module(dataMem_out, O_reg, control_reg2, writeBackData);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// TASKS
@@ -135,7 +137,12 @@ wire[0:4] rtAddr;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// COMBINATIONAL LOGIC
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	assign insnMem_byteOnly = 0;
+	assign insnMem_ubyte = 0;
 
+	assign dataMem_byteOnly = control_reg[`BYTE];
+	assign dataMem_ubyte = control_reg[`UBYTE];
 
 	assign insnMem_addr = eof_flag ? pc_fetch: load_mem_addr;
 	assign dataMem_addr = eof_flag ? exec_out: load_mem_addr;
@@ -184,7 +191,7 @@ wire[0:4] rtAddr;
 
 	// Opens file for read
 	initial begin
-		filename = "bench-v2/Swap.x";
+		filename = "bench-v2/CheckVowel.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end
@@ -272,11 +279,13 @@ wire[0:4] rtAddr;
 
 			@(posedge clock);
 
-				$display("Control bits: BR: %b JP: %b DMWE: %b RWE: %b RWD: %b RDST: %b ALUOP: %b ALUINB: %b JR: %b", control_ex[0], 
+				$display("Control bits: BR: %b JP: %b DMWE: %b RWE: %b RWD: %b RDST: %b ALUOP: %b ALUINB: %b JR: %b RA: %b BYTE: %b UBYTE: %b", control_ex[0], 
 					control_ex[1], control_ex[2], 
 					control_ex[3], control_ex[4], 
 					control_ex[5], control_ex[6], 
-					control_ex[7], control_ex[8]);
+					control_ex[7], control_ex[8],
+					control_ex[9], control_ex[10],
+					control_ex[11]);
 				$display("Effective Address (Branches/Jumps Only): %h", effective_addr);
 
 				control_reg <= control_ex;
@@ -290,7 +299,7 @@ wire[0:4] rtAddr;
 
 			@(posedge clock);
 
-				$display("ALU_Output/Memory address: %h, Memory data (storing only): %d, Memory WREN %b", exec_out, B_reg2, dataMem_wren);
+				$display("ALU_Output/Memory address: %h, Memory data (storing only): %d, Memory WREN %b, Byte only %b", exec_out, B_reg2, dataMem_wren, dataMem_byteOnly);
 
 				control_reg2 <= control_reg;
 				O_reg <= exec_out;

@@ -1,4 +1,4 @@
-module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
+module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, ubyte);
 	
 	// Parameters
 	parameter ACCESS_SIZE 	= 2;
@@ -14,6 +14,8 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 	input [0:ADDRESS_SIZE-1] 	addr;
 	input [0:DATA_SIZE-1] 		d_in;
 	input [0:ACCESS_SIZE-1] 	acc_size;
+	input byteOnly;
+	input ubyte;
 
 	// Outputs
 	output reg[0:DATA_SIZE-1] 	d_out;
@@ -115,15 +117,31 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable);
 
 		if ((enable || busy) && valid_addr) begin
 			if(wren) begin
-				mem_block[mem_index] <= d_in[0:7];
-				mem_block[mem_index+1] <= d_in[8:15];
-				mem_block[mem_index+2] <= d_in[16:23];
-				mem_block[mem_index+3] <= d_in[24:31];
+				if (byteOnly) begin
+					mem_block[mem_index] <= d_in[24:31];
+				end else begin
+					mem_block[mem_index] <= d_in[0:7];
+					mem_block[mem_index+1] <= d_in[8:15];
+					mem_block[mem_index+2] <= d_in[16:23];
+					mem_block[mem_index+3] <= d_in[24:31];
+				end
+				
 			end else begin
-				d_out <= { mem_block[mem_index],
+				if (byteOnly) begin
+					if (ubyte) begin
+						//$display("32 bit value: %h Byte value: %h", { {24{1'b0}}, mem_block[mem_index]}, mem_block[mem_index]);
+						d_out <= { {24{1'b0}}, mem_block[mem_index]};
+					end else begin
+						//$display("First value: %b Byte value: %h", mem_block[mem_index][0], mem_block[mem_index]);
+						d_out <= { {24{mem_block[mem_index][0]}}, mem_block[mem_index]};
+					end
+				end else begin
+					d_out <= { mem_block[mem_index],
 					mem_block[mem_index+1],
 					mem_block[mem_index+2],
 					mem_block[mem_index+3] };
+				end
+				
 			end
 		end
 	end

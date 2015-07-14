@@ -238,7 +238,6 @@ always @(posedge clk) begin
 				6'b001111: begin //LUI
 					control[`ALUINB] <= 1;
 					control[`RWE] <= 1;
-					control[`RWD] <= 1;
 					$display("LUI Rt: %d Imm: %d", rt, imm);
 				end
 
@@ -246,18 +245,23 @@ always @(posedge clk) begin
 					control[`ALUINB] <= 1;
 					control[`RWE] <= 1;
 					control[`RWD] <= 1;
+					control[`BYTE] <= 1;
 					$display("LB base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b101000: begin //SB
 					control[`ALUINB] <= 1;
 					control[`DMWE] <= 1;
+					control[`BYTE] <= 1;
 					$display("SB base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b100100: begin //LBU
 					control[`ALUINB] <= 1;
-					control[`DMWE] <= 1;
+					control[`RWE] <= 1;
+					control[`RWD] <= 1;
+					control[`BYTE] <= 1;
+					control[`UBYTE] <= 1;
 					$display("LBU base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
