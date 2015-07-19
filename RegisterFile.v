@@ -21,6 +21,7 @@ output wire[0:31] rtOut;
 wire[0:4] rs;
 wire[0:4] rt;
 wire[0:4] rd;
+wire[0:31] zero;
 
 reg[0:31] registers[0:31];
 
@@ -44,7 +45,7 @@ assign rs = insn[6:10];
 assign rt = insn[11:15];
 assign rd = insn[16:20];
 
-// Read on rising edge
+assign zero = registers[0];
 
 assign rsOut = registers[rs];
 assign rtOut = registers[rt];
@@ -65,7 +66,6 @@ initial begin
 end
 
 
-// Write on falling edge
 always @(posedge clock) begin
 	if (control[`RWE]) begin
 		if (control[`RDST]) begin
@@ -73,7 +73,7 @@ always @(posedge clock) begin
 				registers[RETURN_ADDRESS] <= writeBackData;
 				$display("WriteBack data: %h, at Rd address: %d", writeBackData, RETURN_ADDRESS);
 			end else begin
-				registers[rdIn] <= writeBackData;	
+				registers[rdIn] <= writeBackData;
 				$display("WriteBack data: %h, at Rd address: %d", writeBackData, rdIn);
 			end
 		end else begin

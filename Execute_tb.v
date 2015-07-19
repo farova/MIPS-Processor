@@ -4,6 +4,7 @@ module Execute_tb();
 
 parameter START_ADDRESS = 32'h80020000;
 parameter MAIN_RTRN_ADDR = 32'h77777777;
+parameter NOP = 32'h00000000;
 
 
 reg clock;
@@ -11,6 +12,9 @@ reg clock;
 //Fetch registers and wires
 wire[0:31] pc_fetch;
 wire[0:31] jump_addr;
+wire[0:31] fetch_insn_addr;
+wire fetch_stall;
+reg shouldStall;
 
 //PC Registers
 reg[0:31] pc_reg1;
@@ -31,7 +35,8 @@ reg[0:31] B_reg2;
 reg[0:31] O_reg;
 
 //Insn Mem registers and wires
-reg insnMem_wren, stall, insnMem_enable;
+reg insnMem_wren, stall, insnMem_enableReg;
+wire insnMem_enable;
 reg[0:1] insnMem_acc_size;
 wire insnMem_busy;
 wire[0:31] insnMem_addr;
@@ -53,7 +58,7 @@ wire[0:`CNTRL_REG_SIZE-1] control;
 reg valid_ex;
 wire[0:31] pc_ex;
 wire[0:31] insn_ex;
-wire[0:`CNTRL_REG_SIZE-1] control_ex;
+reg[0:`CNTRL_REG_SIZE-1] control_ex;
 wire[0:31] rsIn_ex;
 wire[0:31] rtIn_ex;
 wire [0:31] exec_out;
@@ -95,13 +100,30 @@ wire[0:1] acc_size_out;
 wire[0:4] rsAddr;
 wire[0:4] rtAddr;
 
+//Bypassing wires
+wire[0:4] DX_Rs;
+wire[0:4] DX_Rt;
+wire[0:4] DX_Rd;
+wire[0:4] XM_Rd;
+wire[0:4] XM_Rt;
+wire[0:4] MW_Rd;
+wire[0:4] MW_Rt;
+wire[0:4] FD_Rs;
+wire[0:4] FD_Rt;
+reg[0:31] A_mux_Output;
+reg[0:31] B_mux_Output;
+reg[0:31] stallMux_Output;
+
+reg isLoad;
+reg isStore;
+
 
 //Macros
 `define NULL 0
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// MODULE DEFINITIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	fetch 			fetch_module(clock, stall, pc_fetch, rw, acc_size_out, control_ex, jump_addr);
+	fetch 			fetch_module(clock, fetch_stall, pc_fetch, rw, acc_size_out, control_ex, jump_addr, fetch_insn_addr);
 	mainMem 		insnMem_module(clock, insnMem_addr, insnMem_data_in, insnMem_out, insnMem_acc_size, insnMem_wren, insnMem_busy, insnMem_enable, insnMem_byteOnly, insnMem_ubyte);
 	decode 			decode_module(clock, insn_dec, pc_dec, valid_insn, control);
 	RegisterFile 	register_module(clock, insn_dec, rtIn_reg, rdIn_reg, rsOut_reg, rtOut_reg, writeBackData, control_reg2);
@@ -134,41 +156,94 @@ wire[0:4] rtAddr;
 				end
 		end
 	endtask
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// COMBINATIONAL LOGIC
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	//Bypassing signals
+	assign FD_Rs = insnMem_out[6:10];
+	assign FD_Rt = insnMem_out[11:15];
+	assign DX_Rs = insn_reg2[6:10];
+	assign DX_Rt = insn_reg2[11:15];
+	assign XM_Rd = control_reg[`ALUINB] ? insn_reg3[11:15]: insn_reg3[16:20];
+	assign MW_Rd = control_reg2[`ALUINB] ? insn_reg4[11:15]:insn_reg4[16:20];
+
 	assign insnMem_byteOnly = 0;
 	assign insnMem_ubyte = 0;
 
 	assign dataMem_byteOnly = control_reg[`BYTE];
 	assign dataMem_ubyte = control_reg[`UBYTE];
 
-	assign insnMem_addr = eof_flag ? pc_fetch: load_mem_addr;
+	assign insnMem_addr = eof_flag ? fetch_insn_addr: load_mem_addr;
 	assign dataMem_addr = eof_flag ? exec_out: load_mem_addr;
+	assign insnMem_enable = shouldStall ? 0 : insnMem_enableReg;
 
 	assign jump_addr = effective_addr;
 
-	assign pc_dec = pc_reg1;
+	assign pc_dec = pc_fetch;
 	assign pc_ex = pc_reg2;
 
-	assign insn_dec = insn_reg1;
+	assign insn_dec = insnMem_out;
 	assign insn_ex = insn_reg2;
 
-	assign rsAddr = insn_reg1[6:10];
-	assign rtAddr = insn_reg1[11:15];
+	assign rsAddr = insnMem_out[6:10];
+	assign rtAddr = insnMem_out[11:15];
 
 
-	assign rsIn_ex = A_reg;
-	assign rtIn_ex = B_reg;
+	assign rsIn_ex = A_mux_Output;
+	assign rtIn_ex = B_mux_Output;
 
-	assign control_ex = control;
 
 	assign dataMem_data_in = eof_flag ? B_reg2: data_in;
 	assign insnMem_data_in = data_in;
 
 	assign rtIn_reg = insn_reg4[11:15];
-	assign rdIn_reg = insn_reg4[6:20];
+	assign rdIn_reg = insn_reg4[16:20];
+
+	assign fetch_stall = shouldStall ? 1 : stall;
+
+	//Insert Nop on Load-Use Stall
+	always@(*) begin
+		if (((FD_Rs == DX_Rt && control[`SRC1]) || (FD_Rt == DX_Rt && control[`SRC2])) && !control[`STORE] && control_ex[`LOAD]) begin
+			stallMux_Output = NOP;
+			shouldStall = 1;
+		end else begin
+			stallMux_Output = insnMem_out;
+			shouldStall = 0;
+		end
+	end
+
+	//Bypassing MUX for ALU_A
+	always@(*) begin
+		//if (control_reg[`RWE]) begin
+			if (DX_Rs == XM_Rd && control_ex[`SRC1] && control_reg[`DEST]) begin
+				A_mux_Output = exec_out;
+			end else if (DX_Rs == MW_Rd && control_ex[`SRC1] && control_reg2[`DEST]) begin
+				A_mux_Output = writeBackData;
+			end else begin
+				A_mux_Output = A_reg;
+			end
+		/*end else begin
+			A_mux_Output = A_reg;
+		end*/
+		
+	end
+
+	//Bypassing MUX for ALU_B
+	always@(*) begin
+		//if (control_reg[`RWE]) begin
+			if (DX_Rt == XM_Rd && control_ex[`SRC2] && control_reg[`DEST]) begin
+				B_mux_Output = exec_out;
+			end else if (DX_Rt == MW_Rd && control_ex[`SRC2] && control_reg2[`DEST]) begin
+				B_mux_Output = writeBackData;
+			end else begin
+				B_mux_Output = B_reg;
+			end
+		/*end else begin
+			B_mux_Output = B_reg;
+		end*/
+		
+	end
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +252,7 @@ wire[0:4] rtAddr;
 	initial begin
 		clock <= 0;
 		load_mem_addr <= START_ADDRESS;
-		insnMem_enable <= 1;
+		insnMem_enableReg <= 1;
 		insnMem_wren <= 1;
 		insnMem_acc_size <= 2'b00;
 		dataMem_enable <= 1;
@@ -186,12 +261,13 @@ wire[0:4] rtAddr;
 		stall <= 1;
 		valid_insn <= 0;
 		valid_ex <= 0;
-		loop_count <= 1;	
+		loop_count <= 1;
+		shouldStall = 0;	
 	end
 
 	// Opens file for read
 	initial begin
-		filename = "bench-v2/CheckVowel.x";
+		filename = "bench-v2/SimpleAdd.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end
@@ -238,6 +314,7 @@ wire[0:4] rtAddr;
 			insnMem_acc_size <= acc_size_out;
 
 		@(posedge clock);
+		valid_insn <= 1;
 		
 		/*------------- START PROGRAM EXECUTION -------------*/
 
@@ -245,10 +322,9 @@ wire[0:4] rtAddr;
 		
 			@(posedge clock); 
 			
-				$display("\nPC: %h", pc_fetch);
-				stall <= 1;
+				$display("\nPC: %h", fetch_insn_addr);
 				/*------------- ENDS THE PROGRAM IF PC IS MAIN RETURN ADDRESS -------------*/
-				if (pc_fetch == MAIN_RTRN_ADDR) begin
+				if (fetch_insn_addr == MAIN_RTRN_ADDR) begin
 					$display("END OF PROGRAM\n");
 					register_module.PrintRegs();
 					dataMem_module.PrintStack();
@@ -260,24 +336,29 @@ wire[0:4] rtAddr;
 					dataMem_module.PrintStack();
 				end */
 
-			@(posedge clock); 
-				pc_reg1 <= pc_fetch; //Loads PC + 4 into PC register
-				insn_reg1 <= insnMem_out;
-				valid_insn <= 1;
+				
 
-			@(posedge clock); 
 
 				$display("Register file: Addresses: Rs: %d, Rt: %d Values: Rs: %d, Rt: %d", rsAddr, rtAddr, rsOut_reg, rtOut_reg);
 				A_reg <= rsOut_reg;
 				B_reg <= rtOut_reg;
-				insn_reg2 <= insn_reg1;
-				pc_reg2 <= pc_reg1;
+				insn_reg2 <= stallMux_Output;
+				pc_reg2 <= pc_fetch;
 
 
-				valid_insn <= 0; //Turn off valid insn so data is printed properly
+				//valid_insn <= 0; //Turn off valid insn so data is printed properly
 				valid_ex <= 1;
 
-			@(posedge clock);
+				// Make sure to stall control signals if theres a stall
+				if (shouldStall) begin
+					for (counter = 0; counter < `CNTRL_REG_SIZE-1; counter = counter + 1) begin
+						control_ex[counter] <= 0;
+					end
+				end else begin
+					control_ex <= control;
+				end
+				
+
 
 				$display("Control bits: BR: %b JP: %b DMWE: %b RWE: %b RWD: %b RDST: %b ALUOP: %b ALUINB: %b JR: %b RA: %b BYTE: %b UBYTE: %b", control_ex[0], 
 					control_ex[1], control_ex[2], 
@@ -290,14 +371,12 @@ wire[0:4] rtAddr;
 
 				control_reg <= control_ex;
 
-				B_reg2 <= B_reg;
+				B_reg2 <= B_mux_Output;
 				insn_reg3 <= insn_reg2;
 
 				dataMem_wren <= control_ex[`DMWE]; //Sets the write enable for data memory
 
-				valid_ex <= 0;
-
-			@(posedge clock);
+				//valid_ex <= 0;
 
 				$display("ALU_Output/Memory address: %h, Memory data (storing only): %d, Memory WREN %b, Byte only %b", exec_out, B_reg2, dataMem_wren, dataMem_byteOnly);
 
@@ -305,14 +384,13 @@ wire[0:4] rtAddr;
 				O_reg <= exec_out;
 				insn_reg4 <= insn_reg3;
 
-				dataMem_wren <= 0; //Turns write enable off so that garbage data isn't written into memory accidentally. Remove for pipeline
+				//dataMem_wren <= 0; //Turns write enable off so that garbage data isn't written into memory accidentally. Remove for pipeline
 
-			@(posedge clock);
 
-				stall <= 0; //Turn stall off so PC_Fetch increments the next clock cycle
+				//stall <= 0; //Turn stall off so PC_Fetch increments the next clock cycle
 
 				$display("O register: %h, Memory Output: %d", O_reg, dataMem_out);
-				control_reg2[`RWE] <= 0; //Sets write enable for register file to 0 so that garbage data doesnt get written. Remove for
+				//control_reg2[`RWE] <= 0; //Sets write enable for register file to 0 so that garbage data doesnt get written. Remove for
 										 //pipeline
 
 

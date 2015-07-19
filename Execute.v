@@ -81,10 +81,10 @@ always @(*) begin
 					$display("alu_A: %d, alu_B: %d", alu_A, alu_B);
 				end
 				3'b111: begin //BGTZ
-					z = (alu_A > alu_B) ? 1 : 0;
+					z = (alu_B > 0) ? 1 : 0;
 				end
 				3'b110: begin //BLEZ
-					z = (alu_A <= alu_B) ? 1 : 0;
+					z = (alu_B <= 0) ? 1 : 0;
 				end
 				3'b001: begin //BGEZ and BLTZ
 					if (rt_addr == 5'b00000) begin
