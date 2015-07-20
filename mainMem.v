@@ -1,4 +1,4 @@
-module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, ubyte);
+module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, ubyte, outputNop);
 	
 	// Parameters
 	parameter ACCESS_SIZE 	= 2;
@@ -8,6 +8,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 	parameter MEM_WIDTH 	= 8;
 	parameter START_ADDRESS = 32'h80020000;
 	parameter STACK_PNTR_BASE_ADDR = 32'h80120002;
+	parameter NOP = 32'h00000000;
 
 	// Inputs
 	input	 			clk, wren, enable;
@@ -16,6 +17,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 	input [0:ACCESS_SIZE-1] 	acc_size;
 	input byteOnly;
 	input ubyte;
+	input outputNop;
 
 	// Outputs
 	output reg[0:DATA_SIZE-1] 	d_out;
@@ -62,7 +64,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 		begin
 			$display("\nPrinting Stack\n");
 			address = STACK_PNTR_BASE_ADDR;
-			for (i = 0; i < 11; i = i + 1) begin
+			for (i = 0; i < 15; i = i + 1) begin
 				result[0:7] = mem_block[address - START_ADDRESS];
 				result[8:15] = mem_block[(address + 1) - START_ADDRESS];
 				result[16:23] = mem_block[(address + 2) - START_ADDRESS]; 
@@ -127,20 +129,25 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 				end
 				
 			end else begin
-				if (byteOnly) begin
-					if (ubyte) begin
-						//$display("32 bit value: %h Byte value: %h", { {24{1'b0}}, mem_block[mem_index]}, mem_block[mem_index]);
-						d_out <= { {24{1'b0}}, mem_block[mem_index]};
-					end else begin
-						//$display("First value: %b Byte value: %h", mem_block[mem_index][0], mem_block[mem_index]);
-						d_out <= { {24{mem_block[mem_index][0]}}, mem_block[mem_index]};
-					end
+				if (outputNop) begin
+					d_out <= NOP;
 				end else begin
-					d_out <= { mem_block[mem_index],
-					mem_block[mem_index+1],
-					mem_block[mem_index+2],
-					mem_block[mem_index+3] };
+					if (byteOnly) begin
+						if (ubyte) begin
+							//$display("32 bit value: %h Byte value: %h", { {24{1'b0}}, mem_block[mem_index]}, mem_block[mem_index]);
+							d_out <= { {24{1'b0}}, mem_block[mem_index]};
+						end else begin
+							//$display("First value: %b Byte value: %h", mem_block[mem_index][0], mem_block[mem_index]);
+							d_out <= { {24{mem_block[mem_index][0]}}, mem_block[mem_index]};
+						end
+					end else begin
+						d_out <= { mem_block[mem_index],
+						mem_block[mem_index+1],
+						mem_block[mem_index+2],
+						mem_block[mem_index+3] };
+					end
 				end
+				
 				
 			end
 		end

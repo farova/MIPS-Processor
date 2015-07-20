@@ -66,12 +66,12 @@ always @(*) begin
 	// Need this check because otherwise random instructions can sometimes be passed
 	
 	if (insn == 32'h70621002) begin
-		$display("stupid mul");
+		//$display("stupid mul");
 	end
 
 	if (valid_insn) begin
 
-		$display("Instruction: %h",insn);
+		//$display("Instruction: %h",insn);
 
 		if (!isNoop) begin
 			case(opcode)
@@ -83,7 +83,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("ADD Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("ADD Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100001: begin //ADDU
 							control[`RWE] = 1;
@@ -91,7 +91,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("ADDU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("ADDU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100010: begin //SUB
 							control[`RWE] = 1;
@@ -99,7 +99,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SUB Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SUB Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100011: begin //SUBU
 							control[`RWE] = 1;
@@ -107,27 +107,27 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SUBU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SUBU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b011010: begin //DIV
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
-							$display("DIV Rs: %d Rt: %d", rs, rt);
+							//$display("DIV Rs: %d Rt: %d", rs, rt);
 						end
 						6'b011011: begin //DIVU
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
-							$display("DIVU Rs: %d Rt: %d", rs, rt);
+							//$display("DIVU Rs: %d Rt: %d", rs, rt);
 						end
 						6'b010000: begin //MFHI
 							control[`RDST] = 1;
 							control[`DEST] = 1;
-							$display("MFHI Rd: %d", rd);
+							//$display("MFHI Rd: %d", rd);
 						end
 						6'b010010: begin //MFLO
 							control[`RDST] = 1;
 							control[`DEST] = 1;
-							$display("MFLO Rd: %d", rd);
+							//$display("MFLO Rd: %d", rd);
 						end
 						6'b101010: begin //SLT
 							control[`RWE] = 1;
@@ -135,7 +135,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SLT Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SLT Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b101011: begin //SLTU
 							control[`RWE] = 1;
@@ -143,14 +143,14 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SLTU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SLTU Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b000000: begin //SLL
 							control[`RWE] = 1;
 							control[`RDST] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SLL Sa: %d Rt: %d Rd: %d", sa, rt, rd);
+							//$display("SLL Sa: %d Rt: %d Rd: %d", sa, rt, rd);
 						end
 						6'b000100: begin //SLLV
 							control[`RWE] = 1;
@@ -158,14 +158,14 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SLLV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SLLV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b000010: begin //SRL
 							control[`RWE] = 1;
 							control[`RDST] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SRL Sa: %d Rt: %d Rd: %d", sa, rt, rd);
+							//$display("SRL Sa: %d Rt: %d Rd: %d", sa, rt, rd);
 						end
 						6'b000110: begin //SRLV
 							control[`RWE] = 1;
@@ -173,14 +173,14 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SRLV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SRLV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b000011: begin //SRA
 							control[`RWE] = 1;
 							control[`RDST] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SRA Sa: %d Rt: %d Rd: %d", sa, rt, rd);
+							//$display("SRA Sa: %d Rt: %d Rd: %d", sa, rt, rd);
 						end
 						6'b000111: begin //SRAV
 							control[`RWE] = 1;
@@ -188,7 +188,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("SRAV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("SRAV Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100100: begin //AND
 							control[`RWE] = 1;
@@ -196,7 +196,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("AND Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("AND Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100101: begin //OR
 							control[`RWE] = 1;
@@ -204,7 +204,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;  
-							$display("OR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("OR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100110: begin //XOR
 							control[`RWE] = 1;
@@ -212,7 +212,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("XOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("XOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b100111: begin //NOR
 							control[`RWE] = 1;
@@ -220,7 +220,7 @@ always @(*) begin
 							control[`SRC1] = 1;
 							control[`SRC2] = 1;
 							control[`DEST] = 1;
-							$display("NOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+							//$display("NOR Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 						end
 						6'b001001: begin //JALR
 							control[`JP] = 1;
@@ -229,16 +229,16 @@ always @(*) begin
 							control[`RDST] = 1;
 							control[`SRC1] = 1;
 							control[`DEST] = 1;
-							$display("JALR Rs: %d Rd: %d", rs, rd);
+							//$display("JALR Rs: %d Rd: %d", rs, rd);
 						end
 						6'b001000: begin //JR
 							control[`JP] = 1;
 							control[`JR] = 1;
 							control[`SRC1] = 1;
-							$display("JR Rs: %d", rs);
+							//$display("JR Rs: %d", rs);
 						end
 						default: begin
-							$display("unimplemented calculation type instruction\n");
+							//$display("unimplemented calculation type instruction\n");
 						end
 					endcase
 
@@ -249,7 +249,7 @@ always @(*) begin
 					control[`RWE] = 1;
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
-					$display("ADDIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					//$display("ADDIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b001010: begin //SLTI
@@ -257,7 +257,7 @@ always @(*) begin
 					control[`RWE] = 1;
 					control[`SRC1] = 1;
 					control[`DEST] = 1;	
-					$display("SLTI Rs: %d Rt: %d Imm: %d", rs, rt, imm);			
+					//$display("SLTI Rs: %d Rt: %d Imm: %d", rs, rt, imm);			
 				end
 
 				6'b001011: begin //SLTIU
@@ -265,7 +265,7 @@ always @(*) begin
 					control[`RWE] = 1;
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
-					$display("SLTIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					//$display("SLTIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b001101: begin //ORI
@@ -273,7 +273,7 @@ always @(*) begin
 					control[`RWE] = 1;
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
-					$display("ORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					//$display("ORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b001110: begin //XORI
@@ -281,7 +281,7 @@ always @(*) begin
 					control[`RWE] = 1;
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
-					$display("XORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
+					//$display("XORI Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
 				6'b100011: begin //LW
@@ -291,7 +291,7 @@ always @(*) begin
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
 					control[`LOAD] = 1;
-					$display("LW base: %d Rt: %d offset: %d", base, rt, offset);
+					//$display("LW base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b101011: begin //SW
@@ -300,14 +300,14 @@ always @(*) begin
 					control[`SRC1] = 1;
 					control[`SRC2] = 1;
 					control[`STORE] = 1;
-					$display("SW base: %d Rt: %d offset: %d", base, rt, offset);
+					//$display("SW base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b001111: begin //LUI
 					control[`ALUINB] = 1;
 					control[`RWE] = 1;
 					control[`DEST] = 1;
-					$display("LUI Rt: %d Imm: %d", rt, imm);
+					//$display("LUI Rt: %d Imm: %d", rt, imm);
 				end
 
 				6'b100000: begin //LB
@@ -318,7 +318,7 @@ always @(*) begin
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
 					control[`LOAD] = 1;
-					$display("LB base: %d Rt: %d offset: %d", base, rt, offset);
+					//$display("LB base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b101000: begin //SB
@@ -328,7 +328,7 @@ always @(*) begin
 					control[`SRC1] = 1;
 					control[`SRC2] = 1;
 					control[`STORE] = 1;
-					$display("SB base: %d Rt: %d offset: %d", base, rt, offset);
+					//$display("SB base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b100100: begin //LBU
@@ -340,12 +340,12 @@ always @(*) begin
 					control[`SRC1] = 1;
 					control[`DEST] = 1;
 					control[`LOAD] = 1;
-					$display("LBU base: %d Rt: %d offset: %d", base, rt, offset);
+					//$display("LBU base: %d Rt: %d offset: %d", base, rt, offset);
 				end
 
 				6'b000010: begin //J
 					control[`JP] = 1;
-					$display("J target: %h", insn_index);
+					//$display("J target: %h", insn_index);
 				end		
 
 				6'b000011: begin //JAL
@@ -354,7 +354,7 @@ always @(*) begin
 					control[`RWE] = 1;
 					control[`RDST] = 1;
 					control[`DEST] = 1;
-					$display("JAL target: %h", insn_index);
+					//$display("JAL target: %h", insn_index);
 				end
 
 				6'b000100: begin //BEQ and BEQZ
@@ -362,7 +362,7 @@ always @(*) begin
 					control[`ALUOP] = 1;
 					control[`SRC1] = 1;
 					control[`SRC2] = 1;	
-					$display("BEQ Rs: %d Rt: %d offset: %d", rs, rt, offset);
+					//$display("BEQ Rs: %d Rt: %d offset: %d", rs, rt, offset);
 					
 				end
 
@@ -371,7 +371,7 @@ always @(*) begin
 					control[`ALUOP] = 1;
 					control[`SRC1] = 1;
 					control[`SRC2] = 1;	
-					$display("BNE Rs: %d Rt: %d offset: %d", rs, rt, offset);	
+					//$display("BNE Rs: %d Rt: %d offset: %d", rs, rt, offset);	
 				end
 
 				6'b000001: begin //BGEZ and BLTZ
@@ -380,11 +380,11 @@ always @(*) begin
 					control[`SRC1] = 1;
 
 					if (rt == 6'b000000) begin
-						$display("BLTZ Rs: %d offset: %d", rs, offset);
+						//$display("BLTZ Rs: %d offset: %d", rs, offset);
 					end else if (rt == 6'b000001) begin
-						$display("BGEZ Rs: %d offset: %d", rs, offset);
+						//$display("BGEZ Rs: %d offset: %d", rs, offset);
 					end else begin
-						$display("REGGIM not implemented");
+						//$display("REGGIM not implemented");
 					end
 				end
 
@@ -392,14 +392,14 @@ always @(*) begin
 					control[`BR] = 1;
 					control[`ALUOP] = 1;
 					control[`SRC1] = 1;
-					$display("BGTZ Rs: %d offset: %d", rs, offset);
+					//$display("BGTZ Rs: %d offset: %d", rs, offset);
 				end
 
 				6'b000110: begin //BLEZ
 					control[`BR] = 1;
 					control[`ALUOP] = 1;
 					control[`SRC1] = 1;
-					$display("BLEZ Rs: %d offset: %d", rs, offset);
+					//$display("BLEZ Rs: %d offset: %d", rs, offset);
 				end
 
 				6'b011100: begin //MUL
@@ -408,16 +408,16 @@ always @(*) begin
 					control[`SRC1] = 1;
 					control[`SRC2] = 1;
 					control[`DEST] = 1;
-					$display("MUL Rs: %d Rt: %d Rd: %d", rs, rt, rd);
+					//$display("MUL Rs: %d Rt: %d Rd: %d", rs, rt, rd);
 				end
 
 				default: begin
-					$display("unimplemented instruction\n");
+					//$display("unimplemented instruction\n");
 				end
 
 			endcase
 		end else begin
-			$display("noop");
+			//$display("noop");
 		end
 
 	end

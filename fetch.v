@@ -26,7 +26,7 @@ always @(posedge clk) begin
 	if (!stall) begin
 		if (control[`JP] || control[`BR]) begin
 			address <= jump_addr;
-			pc_out <= jump_addr;
+			pc_out <= jump_addr + 4;
 		end else begin
 			address <= pc_out;
 			pc_out <= pc_out + 4;	

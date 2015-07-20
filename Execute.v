@@ -78,7 +78,7 @@ always @(*) begin
 				end
 				3'b101: begin //BNE and BNEZ
 					z = (alu_A != alu_B) ? 1 : 0;
-					$display("alu_A: %d, alu_B: %d", alu_A, alu_B);
+					//$display("alu_A: %d, alu_B: %d", alu_A, alu_B);
 				end
 				3'b111: begin //BGTZ
 					z = (alu_B > 0) ? 1 : 0;
@@ -222,7 +222,7 @@ always @(posedge clock) begin
 			end
 		endcase
 		if (valid_ex) begin
-			$display("ALU_A: %d, ALU_B: %h", $signed(alu_A), alu_B);
+			//$display("ALU_A: %d, ALU_B: %h", $signed(alu_A), alu_B);
 		end
 	end /*else begin
 		case(opcode)

@@ -17,6 +17,8 @@ input wire[0:31] writeBackData;
 output wire[0:31] rsOut;
 output wire[0:31] rtOut;
 
+reg[0:31] rsOutreg;
+reg[0:31] rtOutreg;
 
 wire[0:4] rs;
 wire[0:4] rt;
@@ -33,8 +35,8 @@ task PrintRegs;
 	integer k;
 	begin
 		$display("\n PRINTING REGISTER VALUES\n");
-		for (k = 0; k < 32; k = k + 1) begin
-			$display("register %d: has value: %d", k, registers[k]);
+		for (k = 0; k < 6; k = k + 1) begin
+			$display("register %d: has value: %h", k, registers[k]);
 		end
 	end
 endtask
@@ -47,8 +49,29 @@ assign rd = insn[16:20];
 
 assign zero = registers[0];
 
-assign rsOut = registers[rs];
-assign rtOut = registers[rt];
+assign rsOut = rsOutreg;
+assign rtOut = rtOutreg;
+
+always@(*) begin
+	rsOutreg = registers[rs];
+	rtOutreg = registers[rt];
+
+	if (control[`RWE]) begin
+		if (control[`RDST]) begin
+			if (rdIn == rs) begin
+				rsOutreg = writeBackData;
+			end else if (rdIn == rt) begin
+				rtOutreg = writeBackData;
+			end
+		end else begin
+			if (rtIn == rs) begin
+				rsOutreg = writeBackData;
+			end else if (rtIn == rt) begin
+				rtOutreg = writeBackData;
+			end
+		end
+	end
+end
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 initial begin
