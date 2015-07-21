@@ -35,7 +35,7 @@ task PrintRegs;
 	integer k;
 	begin
 		$display("\n PRINTING REGISTER VALUES\n");
-		for (k = 0; k < 6; k = k + 1) begin
+		for (k = 0; k < 32; k = k + 1) begin
 			$display("register %d: has value: %h", k, registers[k]);
 		end
 	end
@@ -94,14 +94,14 @@ always @(posedge clock) begin
 		if (control[`RDST]) begin
 			if (control[`RA]) begin
 				registers[RETURN_ADDRESS] <= writeBackData;
-				$display("WriteBack data: %h, at Rd address: %d", writeBackData, RETURN_ADDRESS);
+				//$display("WriteBack data: %h, at Rd address: %d", writeBackData, RETURN_ADDRESS);
 			end else begin
 				registers[rdIn] <= writeBackData;
-				$display("WriteBack data: %h, at Rd address: %d", writeBackData, rdIn);
+				//$display("WriteBack data: %h, at Rd address: %d", writeBackData, rdIn);
 			end
 		end else begin
 			registers[rtIn] <= writeBackData;
-			$display("WriteBack data: %h, at Rt address: %d", writeBackData, rtIn);
+			//$display("WriteBack data: %h, at Rt address: %d", writeBackData, rtIn);
 		end
 		
 	end

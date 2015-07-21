@@ -5,7 +5,6 @@ add wave pc_fetch
 add wave pc_reg1
 add wave pc_reg2
 add wave insnMem_out
-add wave insn_reg1
 add wave insn_reg2
 add wave insn_reg3
 add wave insn_reg4

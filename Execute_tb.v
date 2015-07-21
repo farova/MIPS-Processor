@@ -296,7 +296,7 @@ reg isStore;
 
 	// Opens file for read
 	initial begin
-		filename = "bench-v2/BubbleSort.x";
+		filename = "bench-v2/SimpleAdd.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end
@@ -358,7 +358,7 @@ reg isStore;
 					dataMem_module.PrintStack();
 					$finish;
 				end
-				$display("INSTRUCTION: %h", fetch_insn_addr);
+				//$display("INSTRUCTION: %h", fetch_insn_addr);
 
 				// Prints the registers and the stack (DEBUGGING)
 				//register_module.PrintRegs();
