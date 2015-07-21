@@ -360,9 +360,9 @@ reg isStore;
 				end
 				$display("INSTRUCTION: %h", fetch_insn_addr);
 
-				// Prints the registers and the stack
-				register_module.PrintRegs();
-				dataMem_module.PrintStack();
+				// Prints the registers and the stack (DEBUGGING)
+				//register_module.PrintRegs();
+				//dataMem_module.PrintStack();
 
 				//PC
 				pc_reg1 <= pc_fetch;
