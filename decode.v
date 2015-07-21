@@ -14,9 +14,9 @@ wire isNoop;
 
 
 wire[0:5] opcode;
-output wire[0:4] rs;
-output wire[0:4] rd;
-output wire[0:4] rt;
+wire[0:4] rs;
+wire[0:4] rd;
+wire[0:4] rt;
 wire[0:4] sa;
 wire[0:15] imm;
 wire[0:5] calc_type;
