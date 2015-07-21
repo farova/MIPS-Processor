@@ -296,7 +296,7 @@ reg isStore;
 
 	// Opens file for read
 	initial begin
-		filename = "bench-v2/CheckVowel.x";
+		filename = "bench-v2/DivDivDiv.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end

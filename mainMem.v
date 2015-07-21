@@ -64,7 +64,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 		begin
 			$display("\nPrinting Stack\n");
 			address = STACK_PNTR_BASE_ADDR;
-			for (i = 0; i < 15; i = i + 1) begin
+			for (i = 0; i < 30; i = i + 1) begin
 				result[0:7] = mem_block[address - START_ADDRESS];
 				result[8:15] = mem_block[(address + 1) - START_ADDRESS];
 				result[16:23] = mem_block[(address + 2) - START_ADDRESS]; 

@@ -120,11 +120,13 @@ always @(*) begin
 							//$display("DIVU Rs: %d Rt: %d", rs, rt);
 						end
 						6'b010000: begin //MFHI
+							control[`RWE] = 1;
 							control[`RDST] = 1;
 							control[`DEST] = 1;
 							//$display("MFHI Rd: %d", rd);
 						end
 						6'b010010: begin //MFLO
+							control[`RWE] = 1;
 							control[`RDST] = 1;
 							control[`DEST] = 1;
 							//$display("MFLO Rd: %d", rd);
