@@ -119,12 +119,12 @@ always @(posedge clock) begin
 				data_out <= $unsigned(alu_B) - $unsigned(alu_A);
 			end
 			6'b011010: begin //DIV
-				HI <= alu_B/alu_A;
-				LO <= alu_B % alu_A;
+				LO <= alu_B/alu_A;
+				HI <= alu_B % alu_A;
 			end
 			6'b011011: begin //DIVU
-				HI <= $unsigned(alu_B)/$unsigned(alu_A);
-				LO <= $unsigned(alu_B) % $unsigned(alu_A);
+				LO <= $unsigned(alu_B)/$unsigned(alu_A);
+				HI <= $unsigned(alu_B) % $unsigned(alu_A);
 			end
 			6'b010000: begin //MFHI
 				data_out <= HI;
