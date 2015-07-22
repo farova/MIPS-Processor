@@ -296,7 +296,7 @@ reg isStore;
 
 	// Opens file for read
 	initial begin
-		filename = "bench-v2/BubbleSort.x";
+		filename = "DemoDoom2015.x";
 		$display("%s\n", filename);
   		OpenFile();
 	end

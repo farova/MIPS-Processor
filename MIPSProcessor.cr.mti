@@ -151,11 +151,4 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	Execute
 
-} {} {}} C:/Development/MIPS-Processor/Execute_tb.v {1 {vlog -work work -stats=none C:/Development/MIPS-Processor/Execute_tb.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module Execute_tb
-
-Top level modules:
-	Execute_tb
-
 } {} {}}

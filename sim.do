@@ -8,6 +8,8 @@ add wave insnMem_out
 add wave insn_reg2
 add wave insn_reg3
 add wave insn_reg4
+add wave execute_module/alu_A
+add wave execute_module/alu_B
 add wave A_reg
 add wave B_reg
 add wave A_mux_Output
