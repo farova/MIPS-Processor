@@ -43,7 +43,7 @@ wire[0:31] insnMem_addr;
 wire[0:31] insnMem_data_in;
 wire[0:31] insnMem_out;
 reg insnMem_Nop;
-wire insnMem_byteOnly, insnMem_ubyte;
+wire insnMem_byteOnly, insnMem_ubyte, insnMem_halfword;
 
 //Registers for address and data_in
 reg[0:31] load_mem_addr;
@@ -84,7 +84,7 @@ wire[0:31] dataMem_data_in;
 wire[0:31] dataMem_out;
 wire dataMem_busy;
 reg dataMem_Nop;
-wire dataMem_byteOnly, dataMem_ubyte;
+wire dataMem_byteOnly, dataMem_ubyte, dataMem_halfword;
 
 
 //File reading registers and values
@@ -129,11 +129,11 @@ reg isStore;
 ///// MODULE DEFINITIONS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	fetch 			fetch_module(clock, fetch_stall, pc_fetch, rw, acc_size_out, control_ex, jump_addr, fetch_insn_addr);
-	mainMem 		insnMem_module(clock, insnMem_addr, insnMem_data_in, insnMem_out, insnMem_acc_size, insnMem_wren, insnMem_busy, insnMem_enable, insnMem_byteOnly, insnMem_ubyte, insnMem_Nop);
+	mainMem 		insnMem_module(clock, insnMem_addr, insnMem_data_in, insnMem_out, insnMem_acc_size, insnMem_wren, insnMem_busy, insnMem_enable, insnMem_byteOnly, insnMem_ubyte, insnMem_Nop, insnMem_halfword);
 	decode 			decode_module(clock, insn_dec, pc_dec, valid_insn, control);
 	RegisterFile 	register_module(clock, insn_dec, rtIn_reg, rdIn_reg, rsOut_reg, rtOut_reg, writeBackData, control_reg2);
 	Execute 		execute_module(clock, pc_ex, rsIn_ex, rtIn_ex, insn_ex, valid_ex, control_ex, exec_out, effective_addr);
-	mainMem			dataMem_module(clock, dataMem_addr, dataMem_data_in, dataMem_out, dataMem_acc_size, dataMem_wren, dataMem_busy, dataMem_enable, dataMem_byteOnly, dataMem_ubyte, dataMem_Nop);
+	mainMem			dataMem_module(clock, dataMem_addr, dataMem_data_in, dataMem_out, dataMem_acc_size, dataMem_wren, dataMem_busy, dataMem_enable, dataMem_byteOnly, dataMem_ubyte, dataMem_Nop, dataMem_halfword);
 	writeBack 		writeBack_module(dataMem_out, O_reg, control_reg2, writeBackData);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// TASKS
@@ -173,6 +173,7 @@ reg isStore;
 	//Insn Mem
 	assign insnMem_byteOnly = 0;
 	assign insnMem_ubyte = 0;
+	assign insnMem_halfword = 0;
 	assign insnMem_addr = eof_flag ? fetch_insn_addr: load_mem_addr;
 	assign insnMem_enable = shouldStall ? 0 : insnMem_enableReg;
 	assign insnMem_data_in = data_in;
@@ -198,6 +199,7 @@ reg isStore;
 	assign dataMem_data_in = eof_flag ? data_in_mux: data_in;
 	assign dataMem_byteOnly = control_reg[`BYTE];
 	assign dataMem_ubyte = control_reg[`UBYTE];
+	assign dataMem_halfword = control_reg[`HALFWRD];
 	
 	//Bypassing signals
 	assign FD_Rs = insnMem_out[6:10];

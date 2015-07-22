@@ -73,7 +73,7 @@ always @(*) begin
 			//$display("INSN: %h, OPCODE: %b, BRANCH BITS: %b", insn, opcode, branch_bits);
 			case(branch_bits)
 				3'b100: begin //BEQ and BEQZ
-					//$display("alu_A: %d, alu_B: %d", alu_A, alu_B);
+					$display("alu_A: %d, alu_B: %d", alu_A, alu_B);	
 					z = (alu_A == alu_B) ? 1 : 0;
 				end
 				3'b101: begin //BNE and BNEZ
@@ -187,6 +187,10 @@ always @(posedge clock) begin
 				data_out <= ($unsigned(alu_B) < $unsigned(alu_A)) ? 32'h00000001 : 32'h00000000;
 			end
 
+			6'b001100: begin //ANDI
+				data_out <= alu_A & alu_B;
+			end
+
 			6'b001101: begin //ORI
 				data_out <= $signed(alu_A) | alu_B;
 			end
@@ -209,6 +213,9 @@ always @(posedge clock) begin
 			6'b101000: begin //SB
 				data_out <= alu_A + alu_B;
 			end
+			6'b101001: begin //SH
+				data_out <= alu_A + alu_B;
+			end
 			6'b100100: begin //LBU
 				data_out <= alu_A + alu_B;
 			end
@@ -219,6 +226,7 @@ always @(posedge clock) begin
 				data_out <= pc + 4;
 			end
 			default: begin
+				$display("shit: %h", insn);
 			end
 		endcase
 		if (valid_ex) begin

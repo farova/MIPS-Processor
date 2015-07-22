@@ -1,4 +1,4 @@
-module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, ubyte, outputNop);
+module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, ubyte, outputNop, halfWord);
 	
 	// Parameters
 	parameter ACCESS_SIZE 	= 2;
@@ -17,6 +17,7 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 	input [0:ACCESS_SIZE-1] 	acc_size;
 	input byteOnly;
 	input ubyte;
+	input halfWord;
 	input outputNop;
 
 	// Outputs
@@ -121,6 +122,9 @@ module mainMem (clk, addr, d_in, d_out, acc_size, wren, busy, enable, byteOnly, 
 			if(wren) begin
 				if (byteOnly) begin
 					mem_block[mem_index] <= d_in[24:31];
+				end else if (halfWord) begin
+					mem_block[mem_index] <= d_in[16:23];
+					mem_block[mem_index+1] <= d_in[24:31];
 				end else begin
 					mem_block[mem_index] <= d_in[0:7];
 					mem_block[mem_index+1] <= d_in[8:15];

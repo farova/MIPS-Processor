@@ -1,7 +1,7 @@
 `ifndef _control_vh_
 `define _control_vh_
 
-`define CNTRL_REG_SIZE 17
+`define CNTRL_REG_SIZE 18
 
 `define BR 0
 `define JP 1
@@ -20,5 +20,6 @@
 `define DEST 14
 `define LOAD 15
 `define STORE 16
+`define HALFWRD 17
 
 `endif 

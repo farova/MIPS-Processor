@@ -270,6 +270,13 @@ always @(*) begin
 					//$display("SLTIU Rs: %d Rt: %d Imm: %d", rs, rt, imm);
 				end
 
+				6'b001100: begin //ANDI
+					control[`ALUINB] = 1;
+					control[`RWE] = 1;
+					control[`SRC1] = 1;
+					control[`DEST] = 1;
+				end
+
 				6'b001101: begin //ORI
 					control[`ALUINB] = 1;
 					control[`RWE] = 1;
@@ -331,6 +338,15 @@ always @(*) begin
 					control[`SRC2] = 1;
 					control[`STORE] = 1;
 					//$display("SB base: %d Rt: %d offset: %d", base, rt, offset);
+				end
+
+				6'b101001: begin //SH
+					control[`ALUINB] = 1;
+					control[`DMWE] = 1;
+					control[`HALFWRD] = 1;
+					control[`SRC1] = 1;
+					control[`SRC2] = 1;
+					control[`STORE] = 1;
 				end
 
 				6'b100100: begin //LBU
